@@ -30,6 +30,7 @@
         "vue-template-compiler": "^2.7.14"
     },
     "dependencies": {
+        "antd": "^5.9.0",
         "postcss-cli": "^8.1.0",
         "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
     }
