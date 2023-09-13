@@ -10,8 +10,19 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+mix.webpackConfig({
+    stats: {
+        children: true,
+    },
+});
 
-mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
-    ]);
+mix.js('resources/js/app.jsx', 'public/js')
+    .react()
+    .postCss('resources/css/app.css', 'public/css', [require('tailwindcss'), require('autoprefixer')])
+    .alias({
+        '@': 'resources/js',
+    });
+
+if (mix.inProduction()) {
+    mix.version();
+}
