@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Registration;
 use Inertia\Inertia;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SalonController;
 use App\Http\Controllers\RegistrationController;
 
 /*
@@ -49,5 +50,6 @@ Route::get(
 )->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::resource('/orders', OrderController::class)->middleware('auth');
+Route::resource('salons', SalonController::class)->middleware('auth');
 
 require __DIR__.'/auth.php';
