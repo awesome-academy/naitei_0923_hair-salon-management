@@ -5,13 +5,21 @@ import Input from '@/Components/Input';
 import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
+import { Select } from 'antd';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
+        phoneNumber: '',
         password: '',
         password_confirmation: '',
+        salonName: '',
+        address: '',
+        staffNumber: 0,
+        seatNumber: 0,
+        registrationPackage: '',
     });
 
     useEffect(() => {
@@ -30,6 +38,25 @@ export default function Register() {
         post(route('register'));
     };
 
+    const registrationPackages = [
+        {
+            value: 'small',
+            label: 'Small',
+        },
+        {
+            value: 'medium',
+            label: 'Medium',
+        },
+        {
+            value: 'big',
+            label: 'Big',
+        },
+    ];
+
+    const onSelectedPackageChange = (value) => {
+        setData(prevData => { return { ...prevData, registrationPackage: value } });
+    };
+
     return (
         <Guest>
             <Head title="Register" />
@@ -37,15 +64,30 @@ export default function Register() {
             <ValidationErrors errors={errors} />
 
             <form onSubmit={submit}>
-                <div>
-                    <Label forInput="name" value="Name" />
+                <div className="mt-4">
+                    <Label forInput="firstName" value="FirstName" />
 
                     <Input
                         type="text"
-                        name="name"
-                        value={data.name}
+                        name="firstName"
+                        value={data.firstName}
                         className="mt-1 block w-full"
-                        autoComplete="name"
+                        autoComplete="firstName"
+                        isFocused={true}
+                        handleChange={onHandleChange}
+                        required
+                    />
+                </div>
+
+                <div className="mt-4">
+                    <Label forInput="lastName" value="LastName" />
+
+                    <Input
+                        type="text"
+                        name="lastName"
+                        value={data.lastName}
+                        className="mt-1 block w-full"
+                        autoComplete="lastName"
                         isFocused={true}
                         handleChange={onHandleChange}
                         required
@@ -61,6 +103,20 @@ export default function Register() {
                         value={data.email}
                         className="mt-1 block w-full"
                         autoComplete="username"
+                        handleChange={onHandleChange}
+                        required
+                    />
+                </div>
+
+                <div className="mt-4">
+                    <Label forInput="phoneNumber" value="Phone Number" />
+
+                    <Input
+                        type="text"
+                        name="phoneNumber"
+                        value={data.phoneNumber}
+                        className="mt-1 block w-full"
+                        autoComplete="phoneNumber"
                         handleChange={onHandleChange}
                         required
                     />
@@ -90,6 +146,75 @@ export default function Register() {
                         className="mt-1 block w-full"
                         handleChange={onHandleChange}
                         required
+                    />
+                </div>
+
+                <div className="mt-4">
+                    <Label forInput="salonName" value="SalonName" />
+
+                    <Input
+                        type="text"
+                        name="salonName"
+                        value={data.salonName}
+                        className="mt-1 block w-full"
+                        autoComplete="salonName"
+                        handleChange={onHandleChange}
+                        required
+                    />
+                </div>
+
+                <div className="mt-4">
+                    <Label forInput="address" value="Address" />
+
+                    <Input
+                        type="text"
+                        name="address"
+                        value={data.address}
+                        className="mt-1 block w-full"
+                        autoComplete="address"
+                        handleChange={onHandleChange}
+                        required
+                    />
+                </div>
+
+                <div className="mt-4 flex gap-x-4">
+                    <div className="w-1/3">
+                        <Label forInput="staffNumber" value="Staff Number" />
+
+                        <Input
+                            type="number"
+                            name="staffNumber"
+                            value={data.staffNumber}
+                            className="mt-1 block w-full"
+                            autoComplete="staffNumber"
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
+                    <div className="w-1/3">
+                        <Label forInput="seatNumber" value="Seat Number" />
+
+                        <Input
+                            type="number"
+                            name="seatNumber"
+                            value={data.seatNumber}
+                            className="mt-1 block w-full"
+                            autoComplete="seatNumber"
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div className="mt-4">
+                    <Label className="mb-3" forInput="registrationPackage" value="Registration Package" />
+
+                    <Select
+                        placeholder="Select a package"
+                        onChange={onSelectedPackageChange}
+                        options={registrationPackages}
+                        size='large'
+                        className='w-1/3'
                     />
                 </div>
 
