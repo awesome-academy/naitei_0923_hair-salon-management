@@ -19,7 +19,7 @@ class Salon extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(Salon::class);
+        return $this->belongsToMany(User::class);
     }
 
     public function categories(): HasMany
