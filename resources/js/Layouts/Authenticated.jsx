@@ -10,12 +10,11 @@ import { LangProvider, useLang } from '../Context/LangContext';
 export default function Authenticated({ auth, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [selectedLocale, setSelectedLocale] = useState('en');
-
-    const lang = useLang();
+    const { lang, changeLocale } = useLang();
 
     const handleChange = (value) => {
         setSelectedLocale(value);
-        lang.changeLocale(value); // Use changeLocale to update the locale
+        changeLocale(value); // Use changeLocale to update the locale
     };
 
     return (
