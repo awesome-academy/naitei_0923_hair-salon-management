@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const WebpackShellPluginNext = require('webpack-shell-plugin-next');
 
 /*
  |--------------------------------------------------------------------------
@@ -14,6 +15,10 @@ mix.webpackConfig({
     stats: {
         children: true,
     },
+    plugins:
+    [
+        new WebpackShellPluginNext({onBuildStart:['php artisan lang:js --quiet'], onBuildEnd:[]})
+    ]
 });
 
 mix.js('resources/js/app.jsx', 'public/js')

@@ -2,6 +2,8 @@
 /public/hot
 /public/js
 /public/css
+/public/assets
+/public/messages.json
 /public/storage
 /storage/*.key
 /vendor
