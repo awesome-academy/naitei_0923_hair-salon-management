@@ -3,6 +3,7 @@ import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
 import Button from '@/Components/Button';
 import { Table } from 'antd';
+import { Input, Space } from 'antd';
 import { useLang } from '../../Context/LangContext';
 
 
@@ -52,10 +53,36 @@ export default function Salons(props) {
         },
     ];
     
-    const onTableChange = (pagination, filters, sorter, extra) => {
-        
-    };
+    const onTableChange = (pagination, filters, sorter, extra) => {};
 
+    const [searchValue, setSearchValue] = useState('');
+    const { Search } = Input;
+
+    const onSearch = (value, _e, info) => {
+        setSearchValue(value); 
+        setSalons(setSalonSearchValue(value, searchValue));
+    };
+    
+    const setSalonSearchValue = (value, valuePrev) => {
+        if(valuePrev !== '' && value !== ''){
+            const salonsSearched = [];
+            props[0].salons.forEach( (salon) => {
+                if(salon.id == value || salon.name === value || salon.owner_email === value) salonsSearched.push(salon);
+            });
+            return salonsSearched;
+        }else{
+            if(value === ''){
+                return props[0].salons;
+            }else{
+                const salonsSearched = [];
+                salons.forEach( (salon) => {
+                    if(salon.id == value || salon.name === value || salon.owner_email === value) salonsSearched.push(salon);
+                });
+                return salonsSearched;
+            }
+        }
+    }
+    
     return (
         <Authenticated
             auth={props.auth}
@@ -65,7 +92,10 @@ export default function Salons(props) {
             <Head title="Salons" />
 
             <div className="py-12">
-            <div className="max-w-full mx-auto sm:px-6 lg:px-8">
+                <div className="max-w-xs mr:3 mb-5 sm:px-6 lg:px-8">
+                    <Search  placeholder="input id or salon name or owner email" onSearch={onSearch} enterButton />
+                </div>
+                <div className="max-w-full mx-auto sm:px-6 lg:px-8">
                     <Table 
                         bordered
                         columns={columns} 
