@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,5 +37,7 @@ Route::get(
         return Inertia::render('Dashboard');
     }
 )->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::resource('/orders', OrderController::class)->middleware('auth');
 
 require __DIR__.'/auth.php';

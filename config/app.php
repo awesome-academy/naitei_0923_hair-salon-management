@@ -229,4 +229,5 @@ return [
 
     ],
 
+    'limit_table_records' => 20,
 ];
