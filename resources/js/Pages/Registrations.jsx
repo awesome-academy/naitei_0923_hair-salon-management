@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
-import Button from '@/Components/Button';
 import { Head } from '@inertiajs/inertia-react';
 import { useLang } from '../Context/LangContext';
 import { Table } from 'antd';
+import { Inertia } from '@inertiajs/inertia'
 
 export default function Registrations(props) {
 
     const [registrations, setRegistrations] = useState(props.registrations);
     const { lang } = useLang();
+
+    const submit = (e, record) => {
+        e.preventDefault();
+
+        Inertia.post('/salons', record)
+    }
 
     const columns = [
         {
@@ -55,9 +61,13 @@ export default function Registrations(props) {
             title: 'Action',
             render: (text, record) => {
                 return (
-                    <div>
-                        <Button className="hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Accept')}</Button>
-                    </div>
+                    <form onSubmit={(e) => { submit(e, record) }}>
+                        <div>
+                            <button type="submit" className="hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Accept')}
+                            </button>
+                        </div>
+                    </form>
+
                 )
             }
         },

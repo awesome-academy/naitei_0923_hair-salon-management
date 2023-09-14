@@ -10,6 +10,8 @@ class Registration extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function salon(): HasOne
     {
         return $this->hasOne(Salon::class, 'email', 'owner_email');
