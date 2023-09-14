@@ -1,5 +1,6 @@
 {
     "A fresh verification link has been sent to your email address.": "Một liên kết xác minh mới đã được gửi đến địa chỉ email của bạn.",
+    "Accept": "Chấp nhận",
     "All rights reserved.": "Đã đăng kí bản quyền",
     "Before proceeding, please check your email for a verification link.": "Trước khi tiếp tục, vui lòng kiểm tra email của bạn để biết liên kết xác minh.",
     "click here to request another": "click vào đây để tạo yêu cầu khác",
@@ -30,6 +31,7 @@
     "Please click the button below to verify your email address.": "Vui lòng click vào nút bên dưới để xác minh địa chỉ email của bạn.",
     "Regards": "Trân trọng",
     "Register": "Đăng ký",
+    "Registrations": "Danh sách đăng ký",
     "Remember Me": "Ghi Nhớ",
     "Reset Password": "Đặt Lại Mật Khẩu",
     "Reset Password Notification": "Thông Báo Đặt Lại Mật Khẩu",
