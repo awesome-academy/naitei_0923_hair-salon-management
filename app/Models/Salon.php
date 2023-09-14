@@ -14,7 +14,7 @@ class Salon extends Model
 
     public function salonRoles(): BelongsToMany
     {
-        return $this->belongsToMany(Salon::class);
+        return $this->belongsToMany(SalonRole::class);
     }
 
     public function users(): BelongsToMany
