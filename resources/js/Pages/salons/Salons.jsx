@@ -12,6 +12,19 @@ export default function Salons(props) {
     const [salons, setSalons] = useState(props[0].salons);
     const { lang } = useLang();
 
+    const filters = salons.map(
+        salon => {
+            return {
+                text: salon.package.name + ' - ' + salon.package.id,
+                value: salon.package.id,
+            }
+        }
+    ).filter(
+        (item, index, self) => {
+            return self.findIndex((otherItem) => otherItem.text === item.text) === index;
+        }
+    );
+
     const columns = [
         {
             title: 'ID',
@@ -31,15 +44,21 @@ export default function Salons(props) {
         },
         {
             title: lang.get('strings.Registration-Package'),
-            dataIndex: 'registration_package',
+            dataIndex: 'package_id',
+            filters: filters,
+            onFilter: (value, record) => record.package_id === value,
         },
         {
             title: lang.get('strings.Staff-Number'),
             dataIndex: 'num_staffs',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => a.num_staffs - b.num_staffs,
         },
         {
             title: lang.get('strings.Customer-Number'),
             dataIndex: 'num_customers',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => a.num_customers - b.num_customers,
         },
         {
             title: lang.get('strings.Action'),
@@ -67,7 +86,7 @@ export default function Salons(props) {
         if(valuePrev !== '' && value !== ''){
             const salonsSearched = [];
             props[0].salons.forEach( (salon) => {
-                if(salon.id == value || salon.name === value || salon.owner_email === value) salonsSearched.push(salon);
+                if(salon.id == value || salon.name.includes(value) || salon.owner_email.includes(value)) salonsSearched.push(salon);
             });
             return salonsSearched;
         }else{
@@ -76,7 +95,7 @@ export default function Salons(props) {
             }else{
                 const salonsSearched = [];
                 salons.forEach( (salon) => {
-                    if(salon.id == value || salon.name === value || salon.owner_email === value) salonsSearched.push(salon);
+                    if(salon.id == value || salon.name.includes(value) || salon.owner_email.includes(value)) salonsSearched.push(salon);
                 });
                 return salonsSearched;
             }

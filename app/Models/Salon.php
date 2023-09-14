@@ -41,6 +41,6 @@ class Salon extends Model
 
     public function package(): HasOne
     {
-        return $this->hasOne(Package::class);
+        return $this->hasOne(Package::class, 'id', 'package_id');
     }
 }

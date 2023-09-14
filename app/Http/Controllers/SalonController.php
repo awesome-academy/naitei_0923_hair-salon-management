@@ -120,11 +120,11 @@ class SalonController extends Controller
         $allSalons = Salon::all();
 
         foreach ($allSalons as $salon) {
-            $salonID = $salon->id;
+            $salon->package;
 
-            $numStaffs = count(Salon::find($salonID)->users);
+            $numStaffs = count($salon->users);
 
-            $numCustomers = count(Salon::find($salonID)->customers);
+            $numCustomers = count($salon->customers);
 
             $salon->num_staffs = $numStaffs;
 
