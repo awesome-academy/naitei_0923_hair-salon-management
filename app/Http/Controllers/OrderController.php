@@ -52,7 +52,9 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        return Inertia::render('orders/Show.jsx', [
+            'order' => $order->load(['customer', 'products']),
+        ]);
     }
 
     /**
