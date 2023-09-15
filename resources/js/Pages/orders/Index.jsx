@@ -12,8 +12,6 @@ export default function Index(props) {
 
     const { lang } = useLang();
 
-    console.log(orders.map(order => { return {...order, customer:order.customer.name}}))
-
     const columns = [
         {
             title: lang.get('strings.Serial'),
@@ -25,7 +23,7 @@ export default function Index(props) {
         },
         {
             title: lang.get('strings.Time-Order'),
-            dataIndex: 'created_at',
+            dataIndex: 'time_arrive',
         },
         {
             title: lang.get('strings.Ordered-Product'),

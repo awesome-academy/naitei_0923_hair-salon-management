@@ -231,4 +231,10 @@ return [
     ],
 
     'limit_table_records' => 20,
+
+    'order_status' => [
+        0 => 'Prepare',
+        1 => 'In Process',
+        2 => 'Done',
+    ]
 ];

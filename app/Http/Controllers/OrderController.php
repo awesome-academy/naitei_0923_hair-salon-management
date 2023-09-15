@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Salon;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,11 +17,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with(['products', 'customer'])->whereDate('created_at', now()->toDateString());
-
         return Inertia::render('orders/Index.jsx', [
-            'orders' => $orders->limit(config('app.limit_table_records'))->orderByDesc('created_at')->get(),
-            'max_ordinal' => $orders->count(),
+            ['orders' => $this->transformOrder()],
         ]);
     }
 
@@ -89,5 +88,20 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         //
+    }
+
+    private function transformOrder()
+    {
+        $orders = Order::with(['customer', 'products'])->whereDate('created_at', now()->toDateString())
+            ->orderByDesc('created_at')->get();
+        $count = count($orders);
+
+        foreach ($orders as $order) {
+            $order->serial = $count--;
+            $order->time_arrive = Carbon::create($order->created_at)->format('d/m/y H:i');
+            $order->status = config('app.order_status')[$order->status];
+        }
+
+        return $orders;
     }
 }
