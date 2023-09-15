@@ -8,13 +8,13 @@ use Inertia\Inertia;
 
 class RegistrationController extends Controller
 {
-     /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return Inertia::render('Registrations', [
+        return Inertia::render(
+            'Registrations',
+            [
             'registrations' => Registration::all(),
-        ]);
+            ]
+        );
     }
 }

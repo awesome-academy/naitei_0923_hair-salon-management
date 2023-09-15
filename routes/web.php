@@ -34,13 +34,18 @@ Route::get(
     }
 );
 
-Route::get(
-    '/registrations',
-    [
-    RegistrationController::class,
-    'index'
-    ]
-)->middleware(['auth', 'verified'])->name('registrations.index');
+Route::middleware(['superAdmin'])->group(
+    function () {
+
+        Route::get(
+            '/registrations',
+            [
+            RegistrationController::class,
+            'index'
+            ]
+        )->name('registrations.index');
+    }
+);
 
 Route::get(
     '/dashboard',
@@ -50,6 +55,6 @@ Route::get(
 )->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::resource('/orders', OrderController::class)->middleware('auth');
-Route::resource('salons', SalonController::class)->middleware('auth');
+Route::resource('salons', SalonController::class)->middleware('superAdmin');
 
 require __DIR__.'/auth.php';

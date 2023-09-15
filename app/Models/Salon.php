@@ -12,6 +12,8 @@ class Salon extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function salonRoles(): BelongsToMany
     {
         return $this->belongsToMany(SalonRole::class);

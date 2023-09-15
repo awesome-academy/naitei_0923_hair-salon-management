@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Salon;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreSalonRequest;
 use Inertia\Inertia;
+use Redirect;
+use DB;
 
 class SalonController extends Controller
 {
@@ -15,11 +18,14 @@ class SalonController extends Controller
      */
     public function index()
     {
-        return Inertia::render('salons/Salons', [
+        return Inertia::render(
+            'salons/Salons',
+            [
             [
                 'salons' => $this->calculateSalon(),
             ],
-        ]);
+            ]
+        );
     }
 
     /**
@@ -35,18 +41,39 @@ class SalonController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreSalonRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        DB::transaction(
+            function () use ($validated) {
+                DB::table('salons')->insert(
+                    [
+                    'owner_email' => $validated['email'],
+                    'name' => $validated['salon_name'],
+                    'address' => $validated['address'],
+                    'registration_package' => $validated['registration_package'],
+                    'is_active' => true,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                    ]
+                );
+
+                DB::table('registrations')->where('email', $validated['email'])->update([ 'status' => 1]);
+            },
+            config('database.connections.mysql.max_attempts')
+        );
+
+        return redirect()->route('dashboard');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Salon  $salon
+     * @param  \App\Models\Salon $salon
      * @return \Illuminate\Http\Response
      */
     public function show(Salon $salon)
@@ -57,7 +84,7 @@ class SalonController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Salon  $salon
+     * @param  \App\Models\Salon $salon
      * @return \Illuminate\Http\Response
      */
     public function edit(Salon $salon)
@@ -68,8 +95,8 @@ class SalonController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Salon  $salon
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Models\Salon        $salon
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Salon $salon)
@@ -80,7 +107,7 @@ class SalonController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Salon  $salon
+     * @param  \App\Models\Salon $salon
      * @return \Illuminate\Http\Response
      */
     public function destroy(Salon $salon)
