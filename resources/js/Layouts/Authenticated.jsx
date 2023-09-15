@@ -8,7 +8,8 @@ import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
     FileTextOutlined,
-    ProjectOutlined
+    ProjectOutlined,
+    CalendarOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 import { router } from '@inertiajs/react';
@@ -39,6 +40,10 @@ export default function Authenticated({ auth, children }) {
             key: 'salons.index',
             icon: <ShopOutlined />,
             label: lang.get('strings.Salon')
+        }, {
+            key: 'orders.index',
+            icon: <CalendarOutlined />,
+            label: lang.get('strings.Order')
         }
     ];
 

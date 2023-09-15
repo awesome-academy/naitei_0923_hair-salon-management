@@ -74,5 +74,12 @@
     "Registration-Package": "Gói đăng kí",
     "Staff-Number": "Số nhân viên",
     "Customer-Number": "Số khách hàng",
-    "Action": "Hành động"
+    "Action": "Hành động",
+    "Serial": "Số thứ tự",
+    "Customer-Name": "Tên khách hàng",
+    "Ordered-Product": "Sản phẩm đã đặt",
+    "Status": "Trạng thái",
+    "List-Order": "Danh sách đặt chỗ",
+    "Time-Order": "Thời gian đặt chỗ",
+    "Order": "Order"
 }
