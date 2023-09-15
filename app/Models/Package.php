@@ -6,16 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Registration extends Model
+class Package extends Model
 {
     use HasFactory;
 
     public function salon(): HasOne
     {
-        return $this->hasOne(Salon::class, 'email', 'owner_email');
+        return $this->hasOne(Salon::class);
     }
-    public function package(): HasOne
+    public function registration(): HasOne
     {
-        return $this->hasOne(Package::class);
+        return $this->hasOne(Registration::class);
     }
 }

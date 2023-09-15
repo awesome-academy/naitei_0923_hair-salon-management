@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Package;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 
@@ -25,7 +26,7 @@ class RegistrationFactory extends Factory
             'address' => $this->faker->address(),
             'seats_number' => $this->faker->numberBetween(1,5000),
             'staffs_number' => $this->faker->numberBetween(1,5000),
-            'registration_package' => $this->faker->numberBetween(1,3),
+            'package_id' => Package::all()->random()->id,
             'status' => $this->faker->numberBetween(1,3),
             'approved_by' => User::where('system_role_id', 1)->get()->random()->id,
             'approved_at' => now(),

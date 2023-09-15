@@ -36,4 +36,9 @@ class Salon extends Model
     {
         return $this->hasOne(Registration::class, 'owner_email', 'email');
     }
+
+    public function package(): HasOne
+    {
+        return $this->hasOne(Package::class);
+    }
 }
