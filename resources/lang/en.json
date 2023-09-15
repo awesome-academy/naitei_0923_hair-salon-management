@@ -74,5 +74,12 @@
     "Registration-Package": "Registration Package",
     "Staff-Number": "Staff Number",
     "Customer-Number": "Customer Number",
-    "Action": "Action"
+    "Action": "Action",
+    "Serial": "Serial",
+    "Customer-Name": "Customer Name",
+    "Ordered-Product": "Ordered Product",
+    "Status": "Status",
+    "List-Order": "List Order",
+    "Time-Order": "Time Order",
+    "Order": "Order"
 }
