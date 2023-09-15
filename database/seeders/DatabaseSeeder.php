@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             SystemRolesSeeder::class,
             CreateInitialAdminAccount::class,
             SalonRolesSeeder::class,
+            PackageSeeder::class,
         ]);
     }
 }
