@@ -5,9 +5,10 @@ import Input from '@/Components/Input';
 import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
-import { Select } from 'antd';
+import { Select, notification } from 'antd';
+import { useLang } from '../../Context/LangContext';
 
-export default function Register() {
+export default function Register(props) {
     const { data, setData, post, processing, errors, reset } = useForm({
         firstName: '',
         lastName: '',
@@ -21,6 +22,7 @@ export default function Register() {
         seatNumber: 0,
         registrationPackage: '',
     });
+    const { lang } = useLang();
 
     useEffect(() => {
         return () => {
@@ -35,26 +37,28 @@ export default function Register() {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('register'));
+        post(route('register'), {
+            onSuccess: () => {
+                openNotification('success',
+                    lang.get('strings.Successfully-Registered'),
+                    lang.get('strings.Please-wait')
+                );
+                reset();
+            },
+        });
     };
 
-    const registrationPackages = [
-        {
-            value: 'small',
-            label: 'Small',
-        },
-        {
-            value: 'medium',
-            label: 'Medium',
-        },
-        {
-            value: 'big',
-            label: 'Big',
-        },
-    ];
+    const registrationPackages = props.packages.map(pk => { return { value: pk.id, label: pk.name } });
 
     const onSelectedPackageChange = (value) => {
         setData(prevData => { return { ...prevData, registrationPackage: value } });
+    };
+
+    const openNotification = (type, message, description) => {
+        notification[type]({
+            message: message,
+            description: description,
+        });
     };
 
     return (
@@ -220,11 +224,11 @@ export default function Register() {
 
                 <div className="flex items-center justify-end mt-4">
                     <Link href={route('login')} className="underline text-sm text-gray-600 hover:text-gray-900">
-                        Already registered?
+                        {lang.get('strings.Already-registered')}
                     </Link>
 
                     <Button className="ml-4" processing={processing}>
-                        Register
+                        {lang.get('Register')}
                     </Button>
                 </div>
             </form>

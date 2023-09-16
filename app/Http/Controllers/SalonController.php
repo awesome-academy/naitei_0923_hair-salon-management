@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreSalonRequest;
 use Inertia\Inertia;
 use Redirect;
-use Illuminate\Support\Facades\DB;
+use DB;
+use Exception;
 
 class SalonController extends Controller
 {
