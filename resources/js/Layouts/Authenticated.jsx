@@ -11,21 +11,17 @@ import {
     ProjectOutlined,
     CalendarOutlined
 } from '@ant-design/icons';
-import { Layout, Menu, theme } from 'antd';
+import { Layout, Menu } from 'antd';
 import { router } from '@inertiajs/react';
 
 const { Header, Content, Sider } = Layout;
 
 export default function Authenticated({ auth, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
-    const [selectedLocale, setSelectedLocale] = useState('en');
-    const [collapsed, setCollapsed] = useState(false);
     const { lang, changeLocale } = useLang();
+    const [selectedLocale, setSelectedLocale] = useState(lang.getLocale());
+    const [collapsed, setCollapsed] = useState(false);
     const authName = `${auth.user.first_name} ${auth.user.last_name}`;
-
-    const {
-        token: { colorBgContainer },
-    } = theme.useToken();
 
     const items = [
         {
@@ -48,8 +44,11 @@ export default function Authenticated({ auth, children }) {
     ];
 
     const handleChange = (value) => {
+        localStorage.removeItem("locale");
+        localStorage.setItem("locale", value);
+
         setSelectedLocale(value);
-        changeLocale(value); // Use changeLocale to update the locale
+        changeLocale(value);
     };
 
     return (
@@ -83,7 +82,7 @@ export default function Authenticated({ auth, children }) {
                         style={{
                             paddingRight: 30,
                             paddingLeft: 0,
-                            background: colorBgContainer,
+                            background: '#fff',
                             display: 'flex',
                             justifyContent: 'space-between'
                         }}
@@ -183,7 +182,7 @@ export default function Authenticated({ auth, children }) {
                             margin: '24px 16px',
                             padding: 24,
                             minHeight: 280,
-                            background: colorBgContainer,
+                            background: '#fff',
                         }}
                     >
                         <main>{children}</main>

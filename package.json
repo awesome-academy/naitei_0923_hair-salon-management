@@ -32,9 +32,10 @@
         "webpack-shell-plugin-next": "^2.3.1"
     },
     "dependencies": {
-        "antd": "^5.9.0",
+        "antd": "^4.24.3",
         "lang.js": "^1.1.14",
         "postcss-cli": "^8.1.0",
+        "styled-components": "^6.0.8",
         "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
     }
 }
