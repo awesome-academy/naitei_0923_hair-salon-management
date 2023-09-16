@@ -28,7 +28,7 @@ class StoreSalonRequest extends FormRequest
             'email' => 'email|required|unique:users|max:255',
             'salon_name' => 'string|required|max:255',
             'address' => 'string|required|max:255',
-            'registration_package' => 'string|required|max:255',
+            'package_id' => 'numeric|required|exists:packages,id',
         ];
     }
 }

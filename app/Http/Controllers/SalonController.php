@@ -48,26 +48,38 @@ class SalonController extends Controller
     {
         $validated = $request->validated();
 
-        DB::transaction(
-            function () use ($validated) {
-                DB::table('salons')->insert(
-                    [
-                    'owner_email' => $validated['email'],
-                    'name' => $validated['salon_name'],
-                    'address' => $validated['address'],
-                    'registration_package' => $validated['registration_package'],
-                    'is_active' => true,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                    ]
-                );
+        $registration_status = collect(config('app.registration_status'));
+        $accepted_id = $registration_status->search('Accepted');
 
-                DB::table('registrations')->where('email', $validated['email'])->update([ 'status' => 1]);
-            },
-            config('database.connections.mysql.max_attempts')
-        );
+        try {
+            DB::transaction(
+                function () use ($validated, $accepted_id) {
+                    DB::table('salons')->insert(
+                        [
+                            'owner_email' => $validated['email'],
+                            'name' => $validated['salon_name'],
+                            'address' => $validated['address'],
+                            'package_id' => $validated['package_id'],
+                            'is_active' => true,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]
+                    );
 
-        return redirect()->route('dashboard');
+                    DB::table('registrations')->where('email', $validated['email'])
+                        ->update([ 'status' => $accepted_id]);
+                },
+                config('database.connections.mysql.max_attempts')
+            );
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(
+                [
+                    'store' => __('there was an error')
+                ]
+            );
+        }
+
+        return redirect()->route('salons.index');
     }
 
     /**

@@ -237,5 +237,11 @@ return [
         1 => 'In Process',
         2 => 'Done',
         3 => 'Cancel'
+    ],
+
+    'registration_status' => [
+        1 => 'Waiting',
+        2 => 'Accepted',
+        3 => 'Rejected',
     ]
 ];
