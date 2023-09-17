@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreSalonRequest;
 use Inertia\Inertia;
 use Redirect;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class SalonController extends Controller
 {
@@ -22,7 +22,7 @@ class SalonController extends Controller
             'salons/Salons',
             [
             [
-                'salons' => $this->calculateSalon(),
+                'salons' => $this->getAllSalon(),
             ],
             ]
         );
@@ -78,7 +78,11 @@ class SalonController extends Controller
      */
     public function show(Salon $salon)
     {
-        //
+        return Inertia::render('salons/show', [
+            [
+                'salon' => $this->aggregateSalonInformation($salon),
+            ],
+        ]);
     }
 
     /**
@@ -115,22 +119,29 @@ class SalonController extends Controller
         //
     }
 
-    private function calculateSalon()
+    private function getAllSalon()
     {
         $allSalons = Salon::all();
 
         foreach ($allSalons as $salon) {
-            $salon->package;
-
-            $numStaffs = count($salon->users);
-
-            $numCustomers = count($salon->customers);
-
-            $salon->num_staffs = $numStaffs;
-
-            $salon->num_customers = $numCustomers;
+            $salon = clone $this->aggregateSalonInformation($salon);
         }
 
         return $allSalons;
+    }
+
+    private function aggregateSalonInformation(Salon $salon)
+    {
+        $salon->package;
+
+        $numStaffs = count($salon->users);
+
+        $numCustomers = count($salon->customers);
+
+        $salon->num_staffs = $numStaffs;
+
+        $salon->num_customers = $numCustomers;
+
+        return $salon;
     }
 }

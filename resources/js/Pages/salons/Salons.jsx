@@ -11,7 +11,7 @@ export default function Salons(props) {
 
     const [salons, setSalons] = useState(props[0].salons);
     const { lang } = useLang();
-
+    console.log(salons);
     const filters = salons.map(
         salon => {
             return {
@@ -51,13 +51,11 @@ export default function Salons(props) {
         {
             title: lang.get('strings.Staff-Number'),
             dataIndex: 'num_staffs',
-            defaultSortOrder: 'descend',
             sorter: (a, b) => a.num_staffs - b.num_staffs,
         },
         {
             title: lang.get('strings.Customer-Number'),
             dataIndex: 'num_customers',
-            defaultSortOrder: 'descend',
             sorter: (a, b) => a.num_customers - b.num_customers,
         },
         {
@@ -65,7 +63,9 @@ export default function Salons(props) {
             render: (text, record) => {
                 return (
                     <div>
-                        <Button className="hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Detail')}</Button>
+                        <a href={route('salons.show', {salon : record.id})}>
+                            <Button className="hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Detail')}</Button>
+                        </a>
                     </div>
                 )
             }
