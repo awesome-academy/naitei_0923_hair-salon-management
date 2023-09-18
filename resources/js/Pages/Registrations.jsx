@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
 import { useLang } from '../Context/LangContext';
-import { Table } from 'antd';
+import CustomTable from '@/Components/CustomeTable';
 import { Inertia } from '@inertiajs/inertia'
 
 export default function Registrations(props) {
@@ -87,7 +87,7 @@ export default function Registrations(props) {
 
             <div className="py-12">
                 <div className="max-w-full mx-auto sm:px-6 lg:px-8">
-                    <Table
+                    <CustomTable
                         bordered
                         columns={columns}
                         dataSource={registrations}

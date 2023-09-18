@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
 import Button from '@/Components/Button';
-import { Table } from 'antd';
-import { Input, Space } from 'antd';
+import CustomTable from '@/Components/CustomeTable';
+import { Input } from 'antd';
 import { useLang } from '../../Context/LangContext';
-
+import 'antd/dist/antd.css';
 
 export default function Salons(props) {
 
@@ -52,54 +52,62 @@ export default function Salons(props) {
             }
         },
     ];
-    
+
     const onTableChange = (pagination, filters, sorter, extra) => {};
 
     const [searchValue, setSearchValue] = useState('');
     const { Search } = Input;
 
     const onSearch = (value, _e, info) => {
-        setSearchValue(value); 
+        setSearchValue(value);
         setSalons(setSalonSearchValue(value, searchValue));
     };
-    
+
     const setSalonSearchValue = (value, valuePrev) => {
-        if(valuePrev !== '' && value !== ''){
+        if (valuePrev !== '' && value !== '') {
             const salonsSearched = [];
-            props[0].salons.forEach( (salon) => {
-                if(salon.id == value || salon.name === value || salon.owner_email === value) salonsSearched.push(salon);
+            props[0].salons.forEach((salon) => {
+                if (salon.id == value || salon.name === value || salon.owner_email === value) salonsSearched.push(salon);
             });
             return salonsSearched;
-        }else{
-            if(value === ''){
+        } else {
+            if (value === '') {
                 return props[0].salons;
-            }else{
+            } else {
                 const salonsSearched = [];
-                salons.forEach( (salon) => {
-                    if(salon.id == value || salon.name === value || salon.owner_email === value) salonsSearched.push(salon);
+                salons.forEach((salon) => {
+                    if (salon.id == value || salon.name === value || salon.owner_email === value) salonsSearched.push(salon);
                 });
                 return salonsSearched;
             }
         }
     }
-    
+
     return (
         <Authenticated
             auth={props.auth}
             errors={props.errors}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{lang.get('strings.Salons')}</h2>}
         >
             <Head title="Salons" />
-
             <div className="py-12">
-                <div className="max-w-xs mr:3 mb-5 sm:px-6 lg:px-8">
-                    <Search  placeholder="input id or salon name or owner email" onSearch={onSearch} enterButton />
+                <div className='sm:px-6 lg:px-8 w-full'>
+                    <h2 className='font-semibold text-2xl text-gray-800 leading-tight'>{lang.get('strings.Salons')}</h2>
+                </div>
+                <div className="flex justify-end w-full mr:3 mb-8 sm:px-6 lg:px-8">
+                    <Search placeholder="input id or salon name or owner email"
+                        onSearch={onSearch} enterButton bordered
+                        size="large"
+                        allowClear
+                        style={{
+                            width: 304,
+                        }} />
+
                 </div>
                 <div className="max-w-full mx-auto sm:px-6 lg:px-8">
-                    <Table 
+                    <CustomTable
                         bordered
-                        columns={columns} 
-                        dataSource={salons} 
+                        columns={columns}
+                        dataSource={salons}
                         onChange={onTableChange} />
                 </div>
             </div>
