@@ -14,10 +14,11 @@ class OrderFactory extends Factory
      * @return array
      */
     public function definition()
-    {
+    {   
+        $customer = Customer::where('is_active', true)->get()->random();
         return [
-            'customer_id' => Customer::where('is_active', true)->get()->random()->id,
-            'salon_id' => Salon::where('is_active', true)->get()->random()->id,
+            'customer_id' => $customer->id,
+            'salon_id' => $customer->salon_id,
             'status' => $this->faker->numberBetween(0, 2),
             'created_at' => now(),
             'updated_at' => now(),

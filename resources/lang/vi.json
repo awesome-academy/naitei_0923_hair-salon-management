@@ -110,5 +110,10 @@
     "Implement-Staff": "Nhân viên thực hiện",
     "Edit": "Chỉnh sửa",
     "Show-Order": "Chi tiết đặt chỗ",
-    "Order-Information": "Thông tin đặt chỗ"
+    "Order-Information": "Thông tin đặt chỗ",
+    "Delete": "Xóa",
+    "Confirm-Delete-Salon": "Bạn chắc chắn muốn xóa Salon này?",
+    "Successfully-Deleted": "Xóa thành công",
+    "Salon-Deleteted": "Salon đã được xóa",
+    "Salon-ID": "Salon ID"
 }
