@@ -87,5 +87,14 @@
     "Status": "Status",
     "List-Order": "List Order",
     "Time-Order": "Time Order",
-    "Order": "Order"
+    "Order": "Order",
+    "Customer-Phone": "Customer-Phone",
+    "Product-Name": "Product Name",
+    "Product-Cost": "Product Cost",
+    "Quantity": "Quantity",
+    "Creation-Time": "Creation Time",
+    "Implement-Staff": "Implement Staff",
+    "Edit": "Edit",
+    "Show-Order": "Show Order",
+    "Order-Information": "Order-Information"
 }

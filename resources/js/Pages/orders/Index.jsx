@@ -49,7 +49,9 @@ export default function Index(props) {
             render: (text, record) => {
                 return (
                     <div>
-                        <Button className="hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Detail')}</Button>
+                        <a href={ route('orders.show', { order : record.id }) }>
+                            <Button className="hover:bg-slate-300 hover:text-gray-950"> {lang.get('strings.Detail')} </Button>
+                        </a>
                     </div>
                 )
             }
