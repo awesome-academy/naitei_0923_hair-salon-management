@@ -40,16 +40,16 @@ Route::middleware(['superAdmin'])->group(
         Route::get(
             '/registrations',
             [
-            RegistrationController::class,
-                'index'
+                RegistrationController::class,
+                'index',
             ]
         )->name('registrations.index');
 
         Route::put(
             '/registrations/{registration}',
             [
-            RegistrationController::class,
-                'reject'
+                RegistrationController::class,
+                'reject',
             ]
         )->name('registrations.reject');
     }

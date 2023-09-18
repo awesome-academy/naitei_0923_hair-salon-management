@@ -47,7 +47,7 @@ export default function Welcome(props) {
                                                 href={route('login')}
                                                 className="underline text-gray-900 dark:text-white"
                                             >
-                                                {lang.get('strings.View-My-Dashboard')}
+                                                {lang.get('strings.Login')}
                                             </a>
                                         </div>
                                     </div>
