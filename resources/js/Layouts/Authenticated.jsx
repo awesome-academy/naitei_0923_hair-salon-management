@@ -183,6 +183,7 @@ export default function Authenticated({ auth, children }) {
                             padding: 24,
                             minHeight: 280,
                             background: '#fff',
+                            overflow: 'scroll',
                         }}
                     >
                         <main>{children}</main>

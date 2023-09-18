@@ -25,10 +25,10 @@ Route::get(
         return Inertia::render(
             'Welcome',
             [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
+                'canLogin' => Route::has('login'),
+                'canRegister' => Route::has('register'),
+                'laravelVersion' => Application::VERSION,
+                'phpVersion' => PHP_VERSION,
             ]
         );
     }
@@ -40,10 +40,18 @@ Route::middleware(['superAdmin'])->group(
         Route::get(
             '/registrations',
             [
-            RegistrationController::class,
-            'index'
+                RegistrationController::class,
+                'index',
             ]
         )->name('registrations.index');
+
+        Route::put(
+            '/registrations/{registration}',
+            [
+                RegistrationController::class,
+                'reject',
+            ]
+        )->name('registrations.reject');
     }
 );
 
