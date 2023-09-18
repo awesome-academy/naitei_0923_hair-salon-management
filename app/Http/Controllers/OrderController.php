@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Salon;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -52,7 +54,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         return Inertia::render('orders/Show.jsx', [
-            'order' => $order->load(['customer', 'products']),
+            ['order' => $this->detailOrderPage($order)],
         ]);
     }
 
@@ -103,5 +105,33 @@ class OrderController extends Controller
         }
 
         return $orders;
+    }
+
+    public function detailOrderPage(Order $order)
+    {
+        $creation_time = Carbon::create($order->created_at);
+        $serial = DB::table('orders')
+            ->whereBetween('created_at', [$creation_time->format('Y-m-d 00:00:00'), $order->created_at])
+            ->count();
+
+        $order->load(['customer', 'products']);
+        $order->time_order = $creation_time->format('d/m/y H:i');
+        $order->status = config('app.order_status')[$order->status];
+        $order->serial = $serial;
+
+        foreach ($order->products as $product) {
+            $product->quantity = $product->pivot->quantity;
+            $product->status = config('app.order_status')[$product->pivot->status];
+            $product->creation_time = Carbon::create($product->pivot->created_at)->format('d/m/y H:i');
+
+            if (isset($product->pivot->staff_id)) {
+                $staff = User::where('id', '=', $product->pivot->staff_id)->get('last_name');
+                $product->staff_name = $staff[0]->last_name;
+            } else {
+                $product->staff_name = "";
+            }
+        }
+
+        return $order;
     }
 }

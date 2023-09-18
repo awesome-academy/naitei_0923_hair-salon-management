@@ -236,5 +236,6 @@ return [
         0 => 'Prepare',
         1 => 'In Process',
         2 => 'Done',
+        3 => 'Cancel'
     ]
 ];
