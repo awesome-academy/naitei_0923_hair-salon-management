@@ -27,7 +27,7 @@ class RegistrationFactory extends Factory
             'seats_number' => $this->faker->numberBetween(1,5000),
             'staffs_number' => $this->faker->numberBetween(1,5000),
             'package_id' => Package::all()->random()->id,
-            'status' => $this->faker->numberBetween(1,3),
+            'status' => $this->faker->numberBetween(0, 2),
             'approved_by' => User::where('system_role_id', 1)->get()->random()->id,
             'approved_at' => now(),
         ];

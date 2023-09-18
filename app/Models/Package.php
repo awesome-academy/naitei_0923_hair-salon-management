@@ -12,10 +12,10 @@ class Package extends Model
 
     public function salon(): HasOne
     {
-        return $this->hasOne(Salon::class);
+        return $this->hasOne(Salon::class, 'package_id', 'id');
     }
     public function registration(): HasOne
     {
-        return $this->hasOne(Registration::class);
+        return $this->hasOne(Registration::class, 'package_id', 'id');
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreSalonRequest;
 use Inertia\Inertia;
 use Redirect;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class SalonController extends Controller
 {
@@ -117,14 +117,11 @@ class SalonController extends Controller
 
     private function calculateSalon()
     {
-        $allSalons = Salon::all();
-
+        $allSalons = Salon::with(['users','customers','package'])->get();
         foreach ($allSalons as $salon) {
-            $salonID = $salon->id;
+            $numStaffs = count($salon->users);
 
-            $numStaffs = count(Salon::find($salonID)->users);
-
-            $numCustomers = count(Salon::find($salonID)->customers);
+            $numCustomers = count($salon->customers);
 
             $salon->num_staffs = $numStaffs;
 
