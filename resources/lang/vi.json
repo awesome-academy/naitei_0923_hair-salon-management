@@ -87,5 +87,14 @@
     "Status": "Trạng thái",
     "List-Order": "Danh sách đặt chỗ",
     "Time-Order": "Thời gian đặt chỗ",
-    "Order": "Đơn hàng"
+    "Order": "Đơn hàng",
+    "Customer-Phone": "Điện thoại khách hàng",
+    "Product-Name": "Tên sản phẩm",
+    "Product-Cost": "Giá sản phẩm",
+    "Quantity": "Số lượng",
+    "Creation-Time": "Thời gian tạo",
+    "Implement-Staff": "Nhân viên thực hiện",
+    "Edit": "Chỉnh sửa",
+    "Show-Order": "Chi tiết đặt chỗ",
+    "Order-Information": "Thông tin đặt chỗ"
 }
