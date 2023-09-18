@@ -32,6 +32,7 @@
         "webpack-shell-plugin-next": "^2.3.1"
     },
     "dependencies": {
+        "@ant-design/charts": "^1.4.2",
         "antd": "^4.24.3",
         "lang.js": "^1.1.14",
         "postcss-cli": "^8.1.0",

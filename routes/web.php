@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\SelectWorkingSalonController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,9 +62,7 @@ Route::middleware(['superAdmin'])->group(
 
 Route::get(
     '/dashboard',
-    function () {
-        return Inertia::render('Dashboard');
-    }
+    [DashboardController::class, 'index']
 )->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'salonManager'])->group(function () {
