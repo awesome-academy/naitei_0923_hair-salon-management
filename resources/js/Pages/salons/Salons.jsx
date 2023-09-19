@@ -11,6 +11,8 @@ import { Inertia } from '@inertiajs/inertia';
 export default function Salons(props) {
 
     const [salons, setSalons] = useState(props[0].salons);
+    const [searchValue, setSearchValue] = useState('');
+    const { Search } = Input;
     const { lang } = useLang();
     
     const filters = salons.map(
@@ -79,9 +81,6 @@ export default function Salons(props) {
     ];
 
     const onTableChange = (pagination, filters, sorter, extra) => {};
-
-    const [searchValue, setSearchValue] = useState('');
-    const { Search } = Input;
 
     const onSearch = (value, _e, info) => {
         setSearchValue(value);

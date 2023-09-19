@@ -4,7 +4,7 @@ import Button from '@/Components/Button';
 import { Head } from '@inertiajs/inertia-react';
 import { useLang } from '../Context/LangContext';
 import CustomTable from '@/Components/CustomeTable';
-import { Input, notification, Tag } from 'antd';
+import { Input, notification, Tag, Modal } from 'antd';
 import { Inertia } from '@inertiajs/inertia'
 import 'antd/dist/antd.css';
 
@@ -14,6 +14,8 @@ export default function Registrations(props) {
     const [searchValue, setSearchValue] = useState('');
     const { lang } = useLang();
     const { Search } = Input;
+    const { confirm } = Modal;
+
 
     useEffect(() => {
         setRegistrations(props.registrations.filter(item => (
