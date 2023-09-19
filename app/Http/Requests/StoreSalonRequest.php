@@ -25,8 +25,12 @@ class StoreSalonRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'email|required|unique:users|max:255',
+            'email' => 'email|required|unique:users,email|max:255',
+            'phone' => 'string|required|unique:users,phone|max:30',
+            'password' => 'string|required',
             'salon_name' => 'string|required|max:255',
+            'first_name' => 'string|required|max:255',
+            'last_name' => 'string|required|max:255',
             'address' => 'string|required|max:255',
             'package_id' => 'numeric|required|exists:packages,id',
         ];

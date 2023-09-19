@@ -34,7 +34,7 @@ class RegistrationController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->withErrors(
                 [
-                    'reject' => __('There was an error'),
+                    'reject' => $e->getMessage(),
                 ]
             );
         }
