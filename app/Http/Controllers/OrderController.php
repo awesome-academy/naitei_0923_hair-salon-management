@@ -89,7 +89,12 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        DB::transaction(function () use ($order) {
+            $order->products()->detach();
+            $order->delete();
+        }, config('database.connections.mysql.max_attempts'));
+
+        return redirect()->route('orders.index');
     }
 
     private function transformOrder()
