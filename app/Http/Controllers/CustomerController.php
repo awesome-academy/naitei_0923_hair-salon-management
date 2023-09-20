@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -49,7 +50,9 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        //
+        return Inertia::render('customers/Show.jsx', [
+            ['customer' => $this->detailCustomerPage($customer)],
+        ]);
     }
 
     /**
@@ -84,5 +87,22 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         //
+    }
+
+    private function detailCustomerPage(Customer $customer)
+    {
+        $customer->load('orders');
+        if ($customer->is_active) {
+            $customer->active = 'Yes';
+        } else {
+            $customer->active = 'No';
+        }
+
+        foreach ($customer->orders as $order) {
+            $order->creation_time = Carbon::create($order->created_at)->format('d/m/y H:i');
+            $order->status = config('app.order_status')[$order->status];
+        }
+
+        return $customer;
     }
 }

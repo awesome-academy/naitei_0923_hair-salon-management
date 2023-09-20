@@ -111,8 +111,8 @@
     "Implement-Staff": "Implement Staff",
     "Edit": "Edit",
     "Show-Order": "Show Order",
-    "Order-Information": "Order-Information",
-    "Delete-Order": "Delete-Order",
+    "Order-Information": "Order Information",
+    "Delete-Order": "Delete Order",
     "Delete": "Delete",
     "Message-Confirm-Delete": "Are you sure want to delete ?",
     "Confirm-Delete-Salon": "Are you sure you want to delete this Salon ?",
@@ -122,6 +122,8 @@
     "Customers": "Customers",
     "List-Customers": "List Customers",
     "Active": "Active",
+    "Customer-Information": "Customer Information",
+    "History-Orders": "History Orders",
     "Detail-Salon": "Detail Salon",
     "Delete-Salon": "Delete Salon"
 }
