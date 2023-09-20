@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\SystemRole;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserFactory extends Factory
 {
@@ -26,20 +27,22 @@ class UserFactory extends Factory
     {
         $systemRoles = SystemRole::all();
         if ($systemRoles->isEmpty()) {
-            DB::table('system_roles')->insert([
+            DB::table('system_roles')->insert(
                 [
-                    'id' => 1,
-                    'name' => 'super admin',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ],
-                [
-                    'id' => 2,
-                    'name' => 'user',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ],
-            ]);
+                    [
+                        'id' => 1,
+                        'name' => 'super admin',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => 'user',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                ]
+            );
         }
         $systemRoles = SystemRole::all();
         $systemRoleId = $systemRoles->random()->id;

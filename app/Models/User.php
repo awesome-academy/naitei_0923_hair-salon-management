@@ -31,6 +31,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function getSystemRoleAttribute()
+    {
+        return SystemRole::find($this->system_role_id)->name;
+    }
+
+    protected $appends = ['system_role'];
     /**
      * The attributes that should be cast to native types.
      *

@@ -23,8 +23,9 @@ export default function Authenticated({ auth, children }) {
     const [selectedLocale, setSelectedLocale] = useState(lang.getLocale());
     const [collapsed, setCollapsed] = useState(false);
     const authName = `${auth.user.first_name} ${auth.user.last_name}`;
+    const systemRole = auth.user.system_role;
 
-    const items = [
+    const superAdminNavbarIems = [
         {
             key: 'dashboard',
             icon: <ProjectOutlined />,
@@ -47,6 +48,32 @@ export default function Authenticated({ auth, children }) {
             label: lang.get('strings.Order')
         }
     ];
+
+    const salonManagerNavbarItem = [
+        {
+            key: 'dashboard',
+            icon: <ProjectOutlined />,
+            label: lang.get('strings.Dashboard')
+        }, {
+            key: 'orders.index',
+            icon: <CalendarOutlined />,
+            label: lang.get('strings.Order')
+        }
+    ];
+
+    const staffNavbarItems = [
+        {
+            key: 'dashboard',
+            icon: <ProjectOutlined />,
+            label: lang.get('strings.Dashboard')
+        }, {
+            key: 'orders.index',
+            icon: <CalendarOutlined />,
+            label: lang.get('strings.Order')
+        }
+    ]
+
+    const navbarItem = systemRole === 'super admin' ? superAdminNavbarIems : salonManagerNavbarItem;
 
     const handleChange = (value) => {
         localStorage.removeItem("locale");
@@ -73,7 +100,7 @@ export default function Authenticated({ auth, children }) {
                     trigger={null} collapsible collapsed={collapsed}
                 >
                     <div className="demo-logo-vertical"></div>
-                    <Menu theme="light" mode="inline" items={items} onSelect={({ item, key }) => { router.get(route(key)); }} />
+                    <Menu theme="light" mode="inline" items={navbarItem} onSelect={({ item, key }) => { router.get(route(key)); }} />
                 </Sider>
                 <Layout
                     className="site-layout"
