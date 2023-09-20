@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
@@ -86,7 +87,15 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        DB::transaction(function () use ($customer) {
+            foreach ($customer->orders as $order) {
+                $order->products()->detach();
+            }
+            $customer->orders()->delete();
+            $customer->delete();
+        }, config('database.connections.mysql.max_attempts'));
+
+        return redirect()->route('customers.index');
     }
 
     private function detailCustomerPage(Customer $customer)

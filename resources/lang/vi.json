@@ -125,5 +125,6 @@
     "Customer-Information": "Thông tin khách hàng",
     "History-Orders": "Lịch sử đặt hàng",
     "Detail-Salon": "Thông tin chi tiết Salon",
-    "Delete-Salon": "Xóa Salon"
+    "Delete-Salon": "Xóa Salon",
+    "Delete-Customer": "Xóa một khách hàng"
 }

@@ -125,5 +125,6 @@
     "Customer-Information": "Customer Information",
     "History-Orders": "History Orders",
     "Detail-Salon": "Detail Salon",
-    "Delete-Salon": "Delete Salon"
+    "Delete-Salon": "Delete Salon",
+    "Delete-Customer": "Delete Customer"
 }

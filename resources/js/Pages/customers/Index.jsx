@@ -12,6 +12,54 @@ export default function Staffs(props) {
 
     const [customers, setCustomers] = useState(props[0].customers);
     const { lang } = useLang();
+    const { confirm } = Modal;
+
+    const openNotification = (type, message, description) => {
+        notification[type]({
+            message: message,
+            description: description,
+        });
+    };
+
+    const showDeleteConfirm = (record) => {
+        confirm({
+            title: lang.get('strings.Delete-Customer'),
+            icon: <ExclamationCircleOutlined />,
+            content: (
+                <>
+                    <h2 className="text-rose-600">{lang.get('strings.Message-Confirm-Delete')}</h2>
+                    <h4>
+                        <b>{lang.get('strings.Customer-Name')}:</b> {record.name}
+                    </h4>
+                    <h4>
+                        <b>{lang.get('strings.Customer-Phone')}:</b> {record.phone}
+                    </h4>
+                </>
+            ),
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk() {
+                Inertia.delete(route('customers.destroy', { customer: record.id }), {
+                    onSuccess: () => {
+                        openNotification('success',
+                            lang.get('strings.Successfully-Deleted'),
+                            lang.get('strings.Salon-Deleteted'),
+                        );
+                    },
+
+                    onError: () => {
+                        openNotification('error',
+                            lang.get('strings.Somethings-went-wrong'),
+                            lang.get('strings.Error-When-Update-To-DB')
+                        );
+                    }
+                });
+            },
+            onCancel() {
+            },
+        });
+    };
 
     const columns = [
         {
@@ -46,7 +94,9 @@ export default function Staffs(props) {
                             () => {
                                 Inertia.get(route('customers.show', { customer : record.id }));
                             }} />
-                        <DeleteOutlined style={{ fontSize: 19 }} />
+                        <DeleteOutlined style={{ fontSize: 19 }} onClick={() => {
+                            showDeleteConfirm(record)
+                        }} />
                     </div>
                 )
             }
