@@ -117,5 +117,8 @@
     "Confirm-Delete-Salon": "Bạn chắc chắn muốn xóa Salon này?",
     "Successfully-Deleted": "Xóa thành công",
     "Salon-Deleteted": "Salon đã được xóa",
-    "Salon-ID": "Salon ID"
+    "Salon-ID": "Salon ID",
+    "Customers": "Khách hàng",
+    "List-Customers": "Danh sách Khách hàng",
+    "Active": "Kích hoạt"
 }

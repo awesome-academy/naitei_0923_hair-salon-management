@@ -9,7 +9,8 @@ import {
     MenuFoldOutlined,
     FileTextOutlined,
     ProjectOutlined,
-    CalendarOutlined
+    CalendarOutlined,
+    UserOutlined
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { router } from '@inertiajs/react';
@@ -36,6 +37,10 @@ export default function Authenticated({ auth, children }) {
             key: 'salons.index',
             icon: <ShopOutlined />,
             label: lang.get('strings.Salon')
+        }, {
+            key: 'customers.index',
+            icon: <UserOutlined />,
+            label: lang.get('strings.Customers')
         }, {
             key: 'orders.index',
             icon: <CalendarOutlined />,
