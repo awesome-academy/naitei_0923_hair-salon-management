@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SalonController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\SelectWorkingSalonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,9 +65,16 @@ Route::get(
 )->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
-    Route::resource('/orders', OrderController::class);
+    Route::resource('/orders', OrderController::class)->middleware('salonManager');
     Route::resource('/customers', CustomerController::class);
 });
+
 Route::resource('salons', SalonController::class)->middleware('superAdmin');
+
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('select-working-salon/{id}', [SelectWorkingSalonController::class, 'index'])->name('selectSalon.show');
+    Route::post('select-working-salon', [SelectWorkingSalonController::class, 'select'])->name('selectSalon.select');
+});
 
 require __DIR__.'/auth.php';
