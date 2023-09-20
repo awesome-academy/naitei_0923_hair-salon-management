@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Registration;
 use Inertia\Inertia;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SalonController;
 use App\Http\Controllers\RegistrationController;
 
@@ -62,7 +63,10 @@ Route::get(
     }
 )->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('/orders', OrderController::class)->middleware('auth');
+Route::middleware(['auth'])->group(function () {
+    Route::resource('/orders', OrderController::class);
+    Route::resource('/customers', CustomerController::class);
+});
 Route::resource('salons', SalonController::class)->middleware('superAdmin');
 
 require __DIR__.'/auth.php';
