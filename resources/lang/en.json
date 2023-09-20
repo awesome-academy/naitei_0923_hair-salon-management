@@ -120,5 +120,7 @@
     "Salon-ID": "Salon ID",
     "Customers": "Customers",
     "List-Customers": "List Customers",
-    "Active": "Active"
+    "Active": "Active",
+    "Detail-Salon": "Detail Salon",
+    "Delete-Salon": "Delete Salon"
 }

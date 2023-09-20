@@ -6,7 +6,7 @@ import { Button, notification, Modal } from 'antd';
 import { useLang } from '../../Context/LangContext';
 import 'antd/dist/antd.css';
 import CustomTable from '@/Components/CustomeTable';
-import { Inertia } from '@inertiajs/inertia'
+import { Inertia } from '@inertiajs/inertia';
 
 export default function Salons(props) {
 
@@ -65,7 +65,9 @@ export default function Salons(props) {
                 return (
                     <div>
                         <div className='pb-2'>
-                            <Button type="primary" className=" hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Detail')}</Button>
+                            <a href={route('salons.show', {salon : record.id})}>
+                                <Button type="primary" className=" hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Detail')}</Button>
+                            </a>
                         </div>
                         <div className='pb-2'>
                             <Button danger type="primary" onClick={() => showDeleteModal(record)} className="hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Delete')}</Button>
@@ -115,7 +117,7 @@ export default function Salons(props) {
             }
         }
     };
-    
+
     const showDeleteModal = (record) => {
         const modalDelete = Modal.warning();
         modalDelete.update({
@@ -177,7 +179,7 @@ export default function Salons(props) {
                     <h2 className='font-semibold text-2xl text-gray-800 leading-tight'>{lang.get('strings.Salons')}</h2>
                 </div>
                 <div className="flex justify-end w-full mr:3 mb-8 sm:px-6 lg:px-8">
-                    <Search placeholder="input id or salon name or owner email"
+                    <Search placeholder="input id, salon name, owner email"
                         onSearch={onSearch} enterButton bordered
                         size="large"
                         allowClear

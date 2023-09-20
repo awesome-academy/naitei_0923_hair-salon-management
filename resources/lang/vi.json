@@ -120,5 +120,7 @@
     "Salon-ID": "Salon ID",
     "Customers": "Khách hàng",
     "List-Customers": "Danh sách Khách hàng",
-    "Active": "Kích hoạt"
+    "Active": "Kích hoạt",
+    "Detail-Salon": "Thông tin chi tiết Salon",
+    "Delete-Salon": "Xóa Salon"
 }
