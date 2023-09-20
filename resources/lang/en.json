@@ -110,5 +110,10 @@
     "Implement-Staff": "Implement Staff",
     "Edit": "Edit",
     "Show-Order": "Show Order",
-    "Order-Information": "Order-Information"
+    "Order-Information": "Order-Information",
+    "Delete": "Delete",
+    "Confirm-Delete-Salon": "Are you sure you want to delete this Salon ?",
+    "Successfully-Deleted": "Successfully Deleted",
+    "Salon-Deleteted": "Salon Deleteted",
+    "Salon-ID": "Salon ID"
 }

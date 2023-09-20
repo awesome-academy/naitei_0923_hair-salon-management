@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
-import Button from '@/Components/Button';
-import CustomTable from '@/Components/CustomeTable';
 import { Input } from 'antd';
+import { Button, notification, Modal } from 'antd';
 import { useLang } from '../../Context/LangContext';
 import 'antd/dist/antd.css';
+import CustomTable from '@/Components/CustomeTable';
+import { Inertia } from '@inertiajs/inertia'
 
 export default function Salons(props) {
 
@@ -51,13 +52,11 @@ export default function Salons(props) {
         {
             title: lang.get('strings.Staff-Number'),
             dataIndex: 'num_staffs',
-            defaultSortOrder: 'descend',
             sorter: (a, b) => a.num_staffs - b.num_staffs,
         },
         {
             title: lang.get('strings.Customer-Number'),
             dataIndex: 'num_customers',
-            defaultSortOrder: 'descend',
             sorter: (a, b) => a.num_customers - b.num_customers,
         },
         {
@@ -65,7 +64,12 @@ export default function Salons(props) {
             render: (text, record) => {
                 return (
                     <div>
-                        <Button className="hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Detail')}</Button>
+                        <div className='pb-2'>
+                            <Button type="primary" className=" hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Detail')}</Button>
+                        </div>
+                        <div className='pb-2'>
+                            <Button danger type="primary" onClick={() => showDeleteModal(record)} className="hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Delete')}</Button>
+                        </div>
                     </div>
                 )
             }
@@ -110,7 +114,57 @@ export default function Salons(props) {
                 return salonsSearched;
             }
         }
+    };
+    
+    const showDeleteModal = (record) => {
+        const modalDelete = Modal.warning();
+        modalDelete.update({
+            title: "Delete Salon",
+            closable: true,
+            okText: "Delete",
+            onOk: () => handleOkDeleteModal(modalDelete, record),
+            content:(
+                <>
+                    <h2 style={{color: '#FF3355'}}>{lang.get('strings.Confirm-Delete-Salon')}</h2>
+                    <h4>
+                        <b>{lang.get('Salon-ID')}:</b> {record.id}
+                    </h4>
+                    <h4>
+                        <b>{lang.get('Salon-Name')}:</b> {record.name}
+                    </h4>
+                </>
+            ),
+        })
+    };
+  
+    const handleOkDeleteModal = (modalDelete, record) => {
+        modalDelete.destroy();
+        deleteSalon(record);
+    };
+
+    const deleteSalon = (record) => {
+        Inertia.delete(route('salons.destroy', { salon: record.id }), record, {
+            onSuccess: () => {
+                openNotification('success',
+                    lang.get('strings.Successfully-Deleted'),
+                    lang.get('strings.Salon-Deleteted')
+                );
+            },
+            onError: () => {
+                openNotification('error',
+                    lang.get('strings.Somethings-went-wrong'),
+                    lang.get('strings.Error-When-Update-To-DB')
+                );
+            }
+        });
     }
+
+    const openNotification = (type, message, description) => {
+        notification[type]({
+            message: message,
+            description: description,
+        });
+    };
 
     return (
         <Authenticated

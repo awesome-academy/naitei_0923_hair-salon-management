@@ -16,7 +16,13 @@ class BillFactory extends Factory
     public function definition()
     {
         return [
-            'order_id' => Order::where('status', 1)->get()->random()->id,
+            'order_id' => function () {
+                $order = Order::doesntHave('bill')->where('status', 1)->get()->random();
+                
+                if ($order) {
+                    return $order->id;
+                }
+            },
             'payment_method' => $this->faker->text(),
             'total' => $this->faker->randomNumber(),
             'cash' => $this->faker->randomNumber(),

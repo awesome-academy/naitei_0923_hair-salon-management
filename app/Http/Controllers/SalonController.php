@@ -6,9 +6,9 @@ use App\Models\Salon;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreSalonRequest;
 use Inertia\Inertia;
-use Redirect;
-use DB;
+use Illuminate\Support\Facades\Redirect;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class SalonController extends Controller
 {
@@ -150,7 +150,34 @@ class SalonController extends Controller
      */
     public function destroy(Salon $salon)
     {
-        //
+        try {
+            DB::transaction(
+                function () use ($salon) {
+                    $salon = Salon::with(['categories','customers'])->find($salon->id);
+                    if ($salon) {
+                        $customers = $salon->customers;
+                        if ($customers) {
+                            DB::table('customers')->where('salon_id', $salon->id)
+                                ->whereIn('id', $customers->pluck('id'))->delete();
+                        }
+                        $categories = $salon->categories;
+                        if ($categories) {
+                            DB::table('categories')->where('salon_id', $salon->id)
+                                ->whereIn('id', $categories->pluck('id'))->delete();
+                        }
+                        $salon->delete();
+                    }
+                }
+            );
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(
+                [
+                    'delete' => __('There was an error'),
+                ]
+            );
+        }
+        
+        return Redirect::back()->with('success', 'Salon Deleted');
     }
 
     private function calculateSalon()
