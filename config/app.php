@@ -243,5 +243,15 @@ return [
         1 => 'Waiting',
         2 => 'Accepted',
         3 => 'Rejected',
+    ],
+
+    'user_active' => [
+        0 => 'False',
+        1 => 'True',
+    ],
+
+    'salon_active' => [
+        0 => 'False',
+        1 => 'True',
     ]
 ];

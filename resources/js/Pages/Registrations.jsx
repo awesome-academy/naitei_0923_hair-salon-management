@@ -36,10 +36,10 @@ export default function Registrations(props) {
                     lang.get('strings.Accepted-Salon-Added')
                 );
             },
-            onError: () => {
+            onError: (error) => {
                 openNotification('error',
                     lang.get('strings.Somethings-went-wrong'),
-                    lang.get('strings.Error-When-Add-To-DB')
+                    error.store
                 );
             }
         });
@@ -55,10 +55,10 @@ export default function Registrations(props) {
                     lang.get('strings.Salon-Rejected')
                 );
             },
-            onError: () => {
+            onError: (error) => {
                 openNotification('error',
                     lang.get('strings.Somethings-went-wrong'),
-                    lang.get('strings.Error-When-Update-To-DB')
+                    error.reject
                 );
             }
         });

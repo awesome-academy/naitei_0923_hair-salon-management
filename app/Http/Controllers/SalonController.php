@@ -52,16 +52,26 @@ class SalonController extends Controller
         $registration_status = collect(config('app.registration_status'));
         $accepted_id = $registration_status->search('Accepted');
 
+        $user_active = collect(config('app.user_active'));
+        $active_id = $user_active->search('True');
+
+        $salon_active = collect(config('app.salon_active'));
+        $salon_active_id = $salon_active->search('True');
+
+        $systemRoleId = DB::table('system_roles')
+            ->where('name', 'user')
+            ->value('id');
+
         try {
             DB::transaction(
-                function () use ($validated, $accepted_id) {
+                function () use ($validated, $accepted_id, $active_id, $salon_active_id, $systemRoleId) {
                     DB::table('salons')->insert(
                         [
                             'owner_email' => $validated['email'],
                             'name' => $validated['salon_name'],
                             'address' => $validated['address'],
                             'package_id' => $validated['package_id'],
-                            'is_active' => true,
+                            'is_active' => $salon_active_id,
                             'created_at' => now(),
                             'updated_at' => now(),
                         ]
@@ -69,13 +79,28 @@ class SalonController extends Controller
 
                     DB::table('registrations')->where('email', $validated['email'])
                         ->update([ 'status' => $accepted_id]);
+
+                    DB::table('users')->insert(
+                        [
+                            'email' => $validated['email'],
+                            'phone' => $validated['phone'],
+                            'email_verified_at' => now(),
+                            'first_name' => $validated['first_name'],
+                            'last_name' => $validated['last_name'],
+                            'password' => $validated['password'],
+                            'is_active' => $active_id,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                            'system_role_id' => $systemRoleId,
+                        ]
+                    );
                 },
                 config('database.connections.mysql.max_attempts')
             );
         } catch (Exception $e) {
             return redirect()->back()->withErrors(
                 [
-                    'store' => __('there was an error')
+                    'store' => $e->getMessage(),
                 ]
             );
         }
