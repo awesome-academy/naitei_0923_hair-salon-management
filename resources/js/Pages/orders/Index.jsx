@@ -1,16 +1,53 @@
 import React, { useState } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
-import Button from '@/Components/Button';
-import {Table, Tag} from 'antd';
+import { Table, Modal, Button, Tag } from 'antd';
 import { useLang } from '../../Context/LangContext';
-
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Inertia } from "@inertiajs/inertia";
 
 export default function Index(props) {
 
     const [orders, setOrders] = useState(props[0].orders);
-
     const { lang } = useLang();
+    const { confirm } = Modal;
+
+    const openNotification = (type, message, description) => {
+        notification[type]({
+            message: message,
+            description: description,
+        });
+    };
+
+    const showDeleteConfirm = (id) => {
+        confirm({
+            title: lang.get('strings.Delete-Order'),
+            icon: <ExclamationCircleOutlined />,
+            content: lang.get('strings.Message-Confirm-Delete'),
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk() {
+                Inertia.delete(route('orders.destroy', { order: id }), {
+                    onSuccess: () => {
+                        openNotification('success',
+                            lang.get('strings.Successfully-Deleted'),
+                            lang.get('strings.Salon-Deleteted'),
+                        );
+                    },
+
+                    onError: () => {
+                        openNotification('error',
+                            lang.get('strings.Somethings-went-wrong'),
+                            lang.get('strings.Error-When-Update-To-DB')
+                        );
+                    }
+                });
+            },
+            onCancel() {
+            },
+        });
+    };
 
     const columns = [
         {
@@ -52,6 +89,11 @@ export default function Index(props) {
                         <a href={ route('orders.show', { order : record.id }) }>
                             <Button className="hover:bg-slate-300 hover:text-gray-950"> {lang.get('strings.Detail')} </Button>
                         </a>
+                        <Button className="ml-4 hover:bg-slate-300 hover:text-gray-950" onClick={() => {
+                            showDeleteConfirm(record.id)
+                        }} type="primary" danger ghost>
+                            {lang.get('strings.Delete')}
+                        </Button>
                     </div>
                 )
             }
