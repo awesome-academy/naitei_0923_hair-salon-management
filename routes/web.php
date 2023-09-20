@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SalonController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\SelectWorkingSalonController;
 use App\Http\Controllers\StaffController;
@@ -65,14 +66,16 @@ Route::get(
     }
 )->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
-    Route::resource('/orders', OrderController::class)->middleware('salonManager');
+Route::middleware(['auth', 'salonManager'])->group(function () {
+    Route::resource('/orders', OrderController::class);
     Route::resource('/customers', CustomerController::class);
+    Route::resource('/products', ProductController::class);
+
+    Route::put('/products/{product}/inactive', [ProductController::class, 'inactive'])->name('products.inactive');
 });
 
 Route::resource('salons', SalonController::class)->middleware('superAdmin');
 Route::resource('staffs', StaffController::class)->middleware('auth', 'verified');
-
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('select-working-salon/{id}', [SelectWorkingSalonController::class, 'index'])->name('selectSalon.show');

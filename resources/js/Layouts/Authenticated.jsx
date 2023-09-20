@@ -10,7 +10,8 @@ import {
     FileTextOutlined,
     ProjectOutlined,
     CalendarOutlined,
-    UserOutlined
+    UserOutlined,
+    ExperimentOutlined
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { router } from '@inertiajs/react';
@@ -62,6 +63,10 @@ export default function Authenticated({ auth, children }) {
             key: 'staffs.index',
             icon: <UserOutlined />,
             label: lang.get('strings.Staff')
+        }, {
+            key: 'products.index',
+            icon: <ExperimentOutlined />,
+            label: lang.get('strings.Product')
         }
     ];
 
