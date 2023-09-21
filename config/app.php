@@ -253,5 +253,10 @@ return [
     'salon_active' => [
         0 => 'False',
         1 => 'True',
+    ],
+
+    'product_active' => [
+        0 => 'False',
+        1 => 'True',
     ]
 ];
