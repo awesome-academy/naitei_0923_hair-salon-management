@@ -39,14 +39,6 @@ export default function Authenticated({ auth, children }) {
             key: 'salons.index',
             icon: <ShopOutlined />,
             label: lang.get('strings.Salon')
-        }, {
-            key: 'customers.index',
-            icon: <UserOutlined />,
-            label: lang.get('strings.Customers')
-        }, {
-            key: 'orders.index',
-            icon: <CalendarOutlined />,
-            label: lang.get('strings.Order')
         }
     ];
 
@@ -55,6 +47,10 @@ export default function Authenticated({ auth, children }) {
             key: 'dashboard',
             icon: <ProjectOutlined />,
             label: lang.get('strings.Dashboard')
+        }, {
+            key: 'customers.index',
+            icon: <UserOutlined />,
+            label: lang.get('strings.Customers')
         }, {
             key: 'orders.index',
             icon: <CalendarOutlined />,
@@ -75,6 +71,10 @@ export default function Authenticated({ auth, children }) {
             key: 'dashboard',
             icon: <ProjectOutlined />,
             label: lang.get('strings.Dashboard')
+        }, {
+            key: 'customers.index',
+            icon: <UserOutlined />,
+            label: lang.get('strings.Customers')
         }, {
             key: 'orders.index',
             icon: <CalendarOutlined />,
