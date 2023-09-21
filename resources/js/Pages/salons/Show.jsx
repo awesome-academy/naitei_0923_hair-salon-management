@@ -83,9 +83,11 @@ export default function DetailSalon (props) {
                                 {salon.name}
                             </h3>
                             <div className='flex space-x-4'>
-                                <Button type="primary" shape="round" icon={<EditOutlined />} size={'large'} onClick={editSalon}>
-                                    {lang.get('strings.Edit')}
-                                </Button>
+                                <a href={route('salons.edit', {salon : salon.id})}>
+                                    <Button type="primary" shape="round" icon={<EditOutlined />} size={'large'} onClick={editSalon}>
+                                        {lang.get('strings.Edit')}
+                                    </Button>
+                                </a>
                                 <Button danger type="primary" shape="round" icon={<DeleteOutlined />} size={'large'} onClick={() => showDeleteModal(salon)} >
                                     {lang.get('strings.Delete')}
                                 </Button>

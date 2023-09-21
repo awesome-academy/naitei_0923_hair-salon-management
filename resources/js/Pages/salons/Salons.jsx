@@ -15,11 +15,24 @@ export default function Salons(props) {
     const { Search } = Input;
     const { lang } = useLang();
     
-    const filters = salons.map(
+    const filters_package = salons.map(
         salon => {
             return {
                 text: salon.package.name + ' - ' + salon.package.id,
                 value: salon.package.id,
+            }
+        }
+    ).filter(
+        (item, index, self) => {
+            return self.findIndex((otherItem) => otherItem.text === item.text) === index;
+        }
+    );
+
+    const filters_active = salons.map(
+        salon => {
+            return {
+                text: salon.is_active,
+                value: salon.is_active,
             }
         }
     ).filter(
@@ -48,7 +61,7 @@ export default function Salons(props) {
         {
             title: lang.get('strings.Registration-Package'),
             dataIndex: 'package_id',
-            filters: filters,
+            filters: filters_package,
             onFilter: (value, record) => record.package_id === value,
         },
         {
@@ -62,17 +75,34 @@ export default function Salons(props) {
             sorter: (a, b) => a.num_customers - b.num_customers,
         },
         {
+            title: lang.get('strings.Active'),
+            dataIndex: 'is_active',
+            filters: filters_active,
+            onFilter: (value, record) => record.is_active === value,
+        },
+        {
             title: lang.get('strings.Action'),
             render: (text, record) => {
                 return (
                     <div>
                         <div className='pb-2'>
                             <a href={route('salons.show', {salon : record.id})}>
-                                <Button type="primary" className=" hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Detail')}</Button>
+                                <Button type="primary" shape="round" className=" hover:bg-slate-300 hover:text-gray-950">
+                                    {lang.get('strings.Detail')}
+                                </Button>
                             </a>
                         </div>
                         <div className='pb-2'>
-                            <Button danger type="primary" onClick={() => showDeleteModal(record)} className="hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Delete')}</Button>
+                            <a href={route('salons.edit', {salon : record.id})}>
+                                <Button style={{backgroundColor: '#ffc107', border: '0px'}} type="primary" shape="round" className=" hover:bg-slate-300 hover:text-gray-950">
+                                    {lang.get('strings.Edit')}
+                                </Button>
+                            </a>
+                        </div>
+                        <div className='pb-2'>
+                            <Button danger type="primary" shape="round" onClick={() => showDeleteModal(record)} className="hover:bg-slate-300 hover:text-gray-950">
+                                {lang.get('strings.Delete')}
+                            </Button>
                         </div>
                     </div>
                 )

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Salon;
+use App\Models\Package;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreSalonRequest;
 use Inertia\Inertia;
@@ -135,7 +136,16 @@ class SalonController extends Controller
      */
     public function edit(Salon $salon)
     {
-        //
+        return Inertia::render(
+            'salons/Edit',
+            [
+                [
+                    'salon' => $salon,
+                    'packages' => DB::table('packages')->select('id', 'name')->orderBy('id')->get(),
+                    'salon_active' => config('app.salon_active'),
+                ],
+            ]
+        );
     }
 
     /**
@@ -147,7 +157,34 @@ class SalonController extends Controller
      */
     public function update(Request $request, Salon $salon)
     {
-        //
+        $validated = $request->validate([
+            'active' => 'boolean|required',
+            'address' => 'string|required|max:255',
+            'id' => 'numeric|required|exists:salons,id',
+            'name' => 'string|required|max:255',
+            'owner_email' => 'email|required|unique:users,email|max:255',
+            'package_id' => 'numeric|required|exists:packages,id',
+        ]);
+
+        try {
+            $salon->update(
+                [
+                    'name' => $validated['name'],
+                    "owner_email" => $validated['owner_email'],
+                    "address" => $validated['address'],
+                    "package_id" => $validated['package_id'],
+                    "is_active" => $validated['active'],
+                ]
+            );
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(
+                [
+                    'update' => __('There was an error'),
+                ]
+            );
+        }
+
+        return redirect()->route('salons.show', ['salon' => $salon->id]);
     }
 
     /**
@@ -204,6 +241,7 @@ class SalonController extends Controller
         $numCustomers = count($salon->customers);
         $salon->num_staffs = $numStaffs;
         $salon->num_customers = $numCustomers;
+        $salon->is_active = config('app.salon_active')[$salon->is_active];
         $salon->created_time = Carbon::create($salon->created_at)->format('d/m/y H:i');
         return $salon;
     }
