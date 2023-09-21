@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SalonController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\SelectWorkingSalonController;
+use App\Http\Controllers\StaffController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,11 +71,15 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::resource('salons', SalonController::class)->middleware('superAdmin');
+Route::resource('staffs', StaffController::class)->middleware('auth', 'verified');
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('select-working-salon/{id}', [SelectWorkingSalonController::class, 'index'])->name('selectSalon.show');
     Route::post('select-working-salon', [SelectWorkingSalonController::class, 'select'])->name('selectSalon.select');
 });
+
+Route::put('staffs/{staff}/inactive', [StaffController::class, 'inActive'])
+    ->middleware('auth', 'verified')->name('staffs.inActive');
 
 require __DIR__.'/auth.php';

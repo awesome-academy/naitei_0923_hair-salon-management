@@ -58,6 +58,10 @@ export default function Authenticated({ auth, children }) {
             key: 'orders.index',
             icon: <CalendarOutlined />,
             label: lang.get('strings.Order')
+        }, {
+            key: 'staffs.index',
+            icon: <UserOutlined />,
+            label: lang.get('strings.Staff')
         }
     ];
 
