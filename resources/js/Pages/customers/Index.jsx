@@ -16,8 +16,11 @@ export default function Staffs(props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { post } = useForm();
     const [form] = Form.useForm();
+    const [modalTitle, setModalTitle] = useState('');
+    const [editMode, setEditMode] = useState(false);
 
     const showModal = () => {
+        setModalTitle(lang.get('strings.Modal-Create-Customer'))
         setIsModalOpen(true);
     };
 
@@ -32,10 +35,41 @@ export default function Staffs(props) {
         });
 
         setIsModalOpen(false);
+        setEditMode(false);
     };
+
+    const handleEditOk = (values) => {
+        Inertia.put(route('customers.update', { customer: values.id }), {...values}, {
+            onSuccess: () => {
+                openNotification('success',
+                    lang.get('strings.Successfully-Edited'),
+                    lang.get('strings.Successfully-Edited-Customer')
+                );
+            },
+        });
+
+        setIsModalOpen(false);
+        setEditMode(false);
+    }
+
+    const handleSubmitModal = (values) => {
+        if (editMode) {
+            handleEditOk(values);
+        } else {
+            handleOk(values);
+        }
+    }
 
     const handleCancel = () => {
         setIsModalOpen(false);
+        setEditMode(false);
+    };
+
+    const showModalEditCustomer = (values) => {
+        setEditMode(true);
+        setModalTitle(lang.get('strings.Modal-Edit-Customer'))
+        setIsModalOpen(true);
+        form.setFieldsValue(values);
     };
 
     const openNotification = (type, message, description) => {
@@ -129,7 +163,10 @@ export default function Staffs(props) {
             render: (text, record) => {
                 return (
                     <div className="flex gap-3 justify-center">
-                        <EditOutlined style={{ fontSize: 19 }} />
+                        <EditOutlined style={{ fontSize: 19 }} onClick={
+                            () => {
+                                showModalEditCustomer(record);
+                            }}/>
                         <EyeOutlined style={{ fontSize: 19 }} onClick={
                             () => {
                                 Inertia.get(route('customers.show', { customer : record.id }));
@@ -163,8 +200,11 @@ export default function Staffs(props) {
                     </Button>
                 </div>
                 <div className="flex justify-end px-8">
-                    <Modal title={lang.get('strings.Modal-Create-Customer')} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
-                        <Form {...layout} form={form} name="control-hooks" onFinish={handleOk}>
+                    <Modal title={modalTitle} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
+                        <Form {...layout} form={form} name="control-hooks" onFinish={handleSubmitModal}>
+                            <Form.Item name="id" className="hidden">
+                                <Input hidden={true} />
+                            </Form.Item>
                             <Form.Item
                                 name="name"
                                 label={lang.get('strings.Customer-Name')}

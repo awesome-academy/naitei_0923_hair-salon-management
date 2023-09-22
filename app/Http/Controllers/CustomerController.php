@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -90,9 +91,17 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Customer $customer)
+    public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        //
+        $request->validated();
+
+        $customer->update([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'is_active' => $request->is_active,
+        ]);
+
+        return redirect()->route('customers.index');
     }
 
     /**
