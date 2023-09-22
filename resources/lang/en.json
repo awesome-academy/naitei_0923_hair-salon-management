@@ -176,5 +176,8 @@
     "Submit": "Submit",
     "Input-Shop-Name-Err": "Please input shop's name!",
     "Input-Address-Err": "Please input address!",
-    "Delete-Salon": "Delete Salon"
+    "Delete-Salon": "Delete Salon",
+    "Successfully-Edited": "Successfully Edited",
+    "Successfully-Edited-Customer": "Successfully Edited Customer",
+    "Modal-Edit-Customer": "Modal Edit Customer"
 }
