@@ -11,7 +11,8 @@ import {
     ProjectOutlined,
     CalendarOutlined,
     UserOutlined,
-    ExperimentOutlined
+    ExperimentOutlined,
+    AppstoreOutlined
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { router } from '@inertiajs/react';
@@ -63,7 +64,11 @@ export default function Authenticated({ auth, children }) {
             key: 'products.index',
             icon: <ExperimentOutlined />,
             label: lang.get('strings.Product')
-        }
+        }, {
+            key: 'categories.index',
+            icon: <AppstoreOutlined />,
+            label: lang.get('strings.Categories')
+        } 
     ];
 
     const staffNavbarItems = [

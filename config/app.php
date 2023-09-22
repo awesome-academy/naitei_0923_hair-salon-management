@@ -258,5 +258,10 @@ return [
     'product_active' => [
         0 => 'False',
         1 => 'True',
+    ],
+
+    'category_active' => [
+        0 => 'False',
+        1 => 'True',
     ]
 ];

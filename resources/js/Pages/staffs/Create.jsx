@@ -26,7 +26,6 @@ export default function Create(props) {
     };
 
     const onFinish = (values) => {
-        console.log(values);
         Inertia.post(route('staffs.store'), values, {
             onSuccess: () => {
                 openNotification('success',
