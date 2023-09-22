@@ -164,14 +164,17 @@
     "Customer-Information": "Customer Information",
     "History-Orders": "History Orders",
     "Detail-Salon": "Detail Salon",
-    "Delete-Salon": "Delete Salon",
     "Delete-Customer": "Delete Customer",
     "Create-Customer": "Create Customer",
-    "Successfully-Created":  "Successfully Created",
     "Successfully-Created-Customer":  "Successfully Created Customer",
     "Successfully-Deleted-Customer": "Successfully Deleted Customer",
     "Active-Account-Customer": "Active Account Customer",
     "Modal-Create-Customer": "Modal Create Customer",
     "Cancel": "Cancel",
-    "Submit": "Submit"
+    "Edit-Salon": "Edit Salon",
+    "Package": "Package",
+    "Submit": "Submit",
+    "Input-Shop-Name-Err": "Please input shop's name!",
+    "Input-Address-Err": "Please input address!",
+    "Delete-Salon": "Delete Salon"
 }
