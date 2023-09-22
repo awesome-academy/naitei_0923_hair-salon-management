@@ -143,6 +143,7 @@ class SalonController extends Controller
                     'salon' => $salon,
                     'packages' => DB::table('packages')->select('id', 'name')->orderBy('id')->get(),
                     'salon_active' => config('app.salon_active'),
+                    'updated_at' => now(),
                 ],
             ]
         );

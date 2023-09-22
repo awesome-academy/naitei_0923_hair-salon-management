@@ -41,12 +41,11 @@ export default function DetailSalon (props) {
     };
 
     const onFinish = (values) => {
-        console.log(values);
         Inertia.put(route('salons.update',{salon: values}), values);
     };
     
     const onFinishFailed = (errorInfo) => {
-        console.log(errorInfo)
+        
     };
 
     return (

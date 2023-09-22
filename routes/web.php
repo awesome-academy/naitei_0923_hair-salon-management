@@ -12,6 +12,8 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\SelectWorkingSalonController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CategoryController;
+use App\Models\Category;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +77,7 @@ Route::middleware(['auth', 'salonManager'])->group(function () {
 
 Route::resource('salons', SalonController::class)->middleware('superAdmin');
 Route::resource('staffs', StaffController::class)->middleware('auth', 'verified');
+Route::resource('categories', CategoryController::class)->middleware('auth', 'verified');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('select-working-salon/{id}', [SelectWorkingSalonController::class, 'index'])->name('selectSalon.show');
