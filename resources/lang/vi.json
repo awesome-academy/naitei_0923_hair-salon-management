@@ -164,5 +164,13 @@
     "History-Orders": "Lịch sử đặt hàng",
     "Detail-Salon": "Thông tin chi tiết Salon",
     "Delete-Salon": "Xóa Salon",
-    "Delete-Customer": "Xóa một khách hàng"
+    "Delete-Customer": "Xóa một khách hàng",
+    "Create-Customer": "Tạo khách hàng mới",
+    "Successfully-Created":  "Tạo thành công",
+    "Successfully-Created-Customer":  "Tạo khách hàng mới thành công",
+    "Successfully-Deleted-Customer": "Xóa thành công một khách hàng",
+    "Active-Account-Customer": "Kích hoạt tài khoản khách hàng",
+    "Modal-Create-Customer": "Modal Tạo khách hàng mới",
+    "Cancel": "Hủy",
+    "Submit": "Gửi"
 }
