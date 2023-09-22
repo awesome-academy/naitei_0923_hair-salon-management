@@ -16,7 +16,7 @@ class ProductFactory extends Factory
     {
         return [
             'category_id' => Category::all()->random()->id,
-            'name' => $this->faker->text(),
+            'name' => $this->faker->text(10),
             'unit' => $this->faker->text(),
             'cost' => $this->faker->randomNumber(),
             'description' => $this->faker->text(),
