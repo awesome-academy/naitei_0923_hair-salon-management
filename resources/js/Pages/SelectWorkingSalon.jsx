@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/inertia-react';
 import { useLang } from '../Context/LangContext';
 import { Inertia } from '@inertiajs/inertia'
 
-export default function Dashboard(props) {
+export default function SelectWorkingSalon(props) {
 
     const { lang } = useLang();
 
@@ -24,7 +24,7 @@ export default function Dashboard(props) {
                         {props.mySalons.map(salon => {
 
                             return (
-                                <div className="p-20 border-t border-gray-200 dark:border-gray-700 md:border-t-0 md:border-l hover:cursor-pointer">
+                                <div className="p-20 border-t border-gray-200 md:border-t-0 md:border-l hover:cursor-pointer">
                                     <div className="text-center">
                                         <div className="w-full h-full hover:text-black ml-4 text-2xl leading-7 font-semibold" onClick={() => {selectSalon(salon.id)}}>
                                             {salon.name}

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use DB;
 
 class User extends Authenticatable
 {
@@ -36,7 +37,20 @@ class User extends Authenticatable
         return SystemRole::find($this->system_role_id)->name;
     }
 
-    protected $appends = ['system_role'];
+    public function getSalonRoleAttribute()
+    {
+        if (session()->has('selectedSalon')) {
+            $salon_role_id = DB::table('salon_user')->where('user_id', $this->id)
+                ->where('salon_id', session('selectedSalon'))->get()->first()->salon_role_id;
+
+            return SalonRole::find($salon_role_id)->name;
+        } else {
+            return null;
+        }
+        return SystemRole::find($this->system_role_id)->name;
+    }
+
+    protected $appends = ['system_role', 'salon_role'];
     /**
      * The attributes that should be cast to native types.
      *

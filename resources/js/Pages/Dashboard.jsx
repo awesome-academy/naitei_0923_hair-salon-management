@@ -21,7 +21,6 @@ export default function Dashboard(props) {
     const { lang } = useLang();
     const [form] = Form.useForm();
     const [quantityForm] = Form.useForm();
-
     const showCreateOrderModal = () => {
         setCreateOrderModalOpen(true);
 
@@ -95,7 +94,7 @@ export default function Dashboard(props) {
     }
 
     const selectQuantityFinish = (value) => {
-        Inertia.post(route('orders.store'), { orderId: nextOrder.order_id, customerId: nextOrder.customer_id, products: value, salonId: 8 }, {
+        Inertia.post(route('orders.store'), { orderId: nextOrder.order_id, customerId: nextOrder.customer_id, products: value, salonId: props[0].selectedSalon }, {
             onSuccess: () => {
                 openNotification('success',
                     lang.get('strings.Successfully-Registered'),

@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Models\SystemRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use DB;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -39,6 +41,18 @@ class AuthenticatedSessionController extends Controller
         $userId = User::where('email', $request->email)->get()->first()->id;
 
         $request->session()->regenerate();
+
+        $systemRoleId = User::find($userId)->system_role_id;
+
+        if (SystemRole::find($systemRoleId)->name == 'super admin') {
+            return redirect()->route('registrations.index');
+        }
+
+        $salonNumber = DB::table('salon_user')->where('user_id', $userId)->count();
+        
+        if ($salonNumber == 1) {
+            return redirect()->route('orders.index');
+        }
 
         return redirect()->route('selectSalon.show', ["id" => $userId]);
     }

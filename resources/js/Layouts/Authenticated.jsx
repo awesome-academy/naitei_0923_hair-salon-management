@@ -29,10 +29,6 @@ export default function Authenticated({ auth, children }) {
 
     const superAdminNavbarIems = [
         {
-            key: 'dashboard',
-            icon: <ProjectOutlined />,
-            label: lang.get('strings.Dashboard')
-        }, {
             key: 'registrations.index',
             icon: <FileTextOutlined />,
             label: lang.get('strings.Registrations')
@@ -73,10 +69,6 @@ export default function Authenticated({ auth, children }) {
 
     const staffNavbarItems = [
         {
-            key: 'dashboard',
-            icon: <ProjectOutlined />,
-            label: lang.get('strings.Dashboard')
-        }, {
             key: 'customers.index',
             icon: <UserOutlined />,
             label: lang.get('strings.Customers')
@@ -87,7 +79,7 @@ export default function Authenticated({ auth, children }) {
         }
     ]
 
-    const navbarItem = systemRole === 'super admin' ? superAdminNavbarIems : salonManagerNavbarItem;
+    const navbarItem = systemRole === 'super admin' ? superAdminNavbarIems : (auth.user.salon_role === 'manager' ? salonManagerNavbarItem : staffNavbarItems);
 
     const handleChange = (value) => {
         localStorage.removeItem("locale");
@@ -171,6 +163,9 @@ export default function Authenticated({ auth, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
+                                        <Dropdown.Link href={route('profile.edit')} method="get" as="button">
+                                            {lang.get('strings.Profile')}
+                                        </Dropdown.Link>
                                         <Dropdown.Link href={route('logout')} method="post" as="button">
                                             {lang.get('strings.Logout')}
                                         </Dropdown.Link>

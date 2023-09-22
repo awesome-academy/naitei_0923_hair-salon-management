@@ -36,7 +36,10 @@ class DashboardController extends Controller
         return Inertia::render(
             'Dashboard',
             [
-                ['nextOrder' => $nextOrder],
+                [
+                    'nextOrder' => $nextOrder,
+                    'selectedSalon' => session('selectedSalon'),
+                ],
             ]
         );
     }

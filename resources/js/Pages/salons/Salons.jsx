@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
-import { Input } from 'antd';
-import { Button, notification, Modal } from 'antd';
+import { Button, notification, Modal, Input, Tooltip } from 'antd';
+import { EditOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useLang } from '../../Context/LangContext';
-import 'antd/dist/antd.css';
 import CustomTable from '@/Components/CustomeTable';
 import { Inertia } from '@inertiajs/inertia';
+import 'antd/dist/antd.css';
 
 export default function Salons(props) {
-
     const [salons, setSalons] = useState(props[0].salons);
     const [searchValue, setSearchValue] = useState('');
     const { Search } = Input;
@@ -84,25 +83,25 @@ export default function Salons(props) {
             title: lang.get('strings.Action'),
             render: (text, record) => {
                 return (
-                    <div>
+                    <div className='flex gap-2'>
                         <div className='pb-2'>
                             <a href={route('salons.show', {salon : record.id})}>
-                                <Button type="primary" shape="round" className=" hover:bg-slate-300 hover:text-gray-950">
-                                    {lang.get('strings.Detail')}
-                                </Button>
+                                <Tooltip title="View">
+                                    <EyeOutlined style={{ fontSize: 19 }} />
+                                </Tooltip>
                             </a>
                         </div>
                         <div className='pb-2'>
                             <a href={route('salons.edit', {salon : record.id})}>
-                                <Button style={{backgroundColor: '#ffc107', border: '0px'}} type="primary" shape="round" className=" hover:bg-slate-300 hover:text-gray-950">
-                                    {lang.get('strings.Edit')}
-                                </Button>
+                                <Tooltip title="Edit">
+                                    <EditOutlined style={{ fontSize: 19 }}/>
+                                </Tooltip>
                             </a>
                         </div>
                         <div className='pb-2'>
-                            <Button danger type="primary" shape="round" onClick={() => showDeleteModal(record)} className="hover:bg-slate-300 hover:text-gray-950">
-                                {lang.get('strings.Delete')}
-                            </Button>
+                            <Tooltip title="Delete">
+                                    <DeleteOutlined style={{ fontSize: 19 }} onClick={() => showDeleteModal(record)} />
+                            </Tooltip>
                         </div>
                     </div>
                 )
