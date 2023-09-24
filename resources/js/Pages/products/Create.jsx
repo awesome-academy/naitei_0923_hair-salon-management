@@ -109,6 +109,17 @@ export default function Create(props) {
                             <Input />
                         </Form.Item>
                         <Form.Item
+                            name="quantity"
+                            label="Quantity"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
                             name="description"
                             label="Description"
                             rules={[
