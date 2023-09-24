@@ -265,5 +265,10 @@ return [
         1 => 'True',
     ],
 
-    'default_product_active' => 1
+    'default_product_active' => 1,
+
+    'bill_status' => [
+        0 => 'Unpaid',
+        1 => 'Paid',
+    ],
 ];

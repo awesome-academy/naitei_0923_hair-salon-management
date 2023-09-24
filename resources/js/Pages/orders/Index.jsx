@@ -3,7 +3,7 @@ import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
 import { Table, Modal, Button, Tag } from 'antd';
 import { useLang } from '../../Context/LangContext';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FileDoneOutlined, ExclamationCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { Inertia } from "@inertiajs/inertia";
 
 export default function Index(props) {
@@ -83,17 +83,21 @@ export default function Index(props) {
         },
         {
             title: lang.get('strings.Action'),
+            align: 'center',
             render: (text, record) => {
                 return (
-                    <div>
-                        <a href={ route('orders.show', { order : record.id }) }>
-                            <Button className="hover:bg-slate-300 hover:text-gray-950"> {lang.get('strings.Detail')} </Button>
-                        </a>
-                        <Button className="ml-4 hover:bg-slate-300 hover:text-gray-950" onClick={() => {
+                    <div className="flex gap-3 justify-center">
+                        <EyeOutlined style={{ fontSize: 19 }} title={lang.get('strings.Detail')} onClick={
+                            () => {
+                                Inertia.get(route('orders.show', { order : record.id }));
+                            }} />
+                        <FileDoneOutlined style={{ fontSize: 19 }} title={lang.get('strings.Detail-Bill')} onClick={
+                            () => {
+                                Inertia.get(route('bills.show', { order : record.id }));
+                            }}/>
+                        <DeleteOutlined style={{ fontSize: 19 }} title={lang.get('strings.Delete')} onClick={() => {
                             showDeleteConfirm(record.id)
-                        }} type="primary" danger ghost>
-                            {lang.get('strings.Delete')}
-                        </Button>
+                        }} />
                     </div>
                 )
             }
