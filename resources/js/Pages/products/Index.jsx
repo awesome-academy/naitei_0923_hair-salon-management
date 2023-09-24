@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/inertia-react';
 import { useLang } from '../../Context/LangContext';
 import CustomTable from '@/Components/CustomeTable';
 import { Input, Modal, notification, Tag, Button, Tooltip } from 'antd';
-import { EditOutlined, EyeOutlined, PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { EditOutlined, EyeOutlined, PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Inertia } from '@inertiajs/inertia'
 import 'antd/dist/antd.css';
 
@@ -74,28 +74,23 @@ export default function Products(props) {
             render: (text, record) => {
                 return (
                     <div>
-                        {record.is_active === 'False' ?
-                            <div>
-                                <Tag color="#f50">{lang.get('strings.Inactive')}</Tag>
-                            </div> :
-                            <div className="flex gap-3 justify-center">
-                                <Tooltip title="Edit">
-                                    <EditOutlined style={{ fontSize: 19 }} onClick={() => { editProduct(record.id) }} />
-                                </Tooltip>
-                                <Tooltip title="View">
-                                    <EyeOutlined style={{ fontSize: 19 }} onClick={
-                                        () => {
-                                            Inertia.get(route('products.show', record, {
-                                                onError: () => {},
-                                                onSuccess: () => {},
-                                            }))
-                                        }} />
-                                </Tooltip>
-                                <Tooltip title="Inactive">
-                                    <MinusCircleOutlined style={{ fontSize: 19 }} onClick={() => {showModal(record.id)}} />
-                                </Tooltip>
-                            </div>
-                        }
+                        <div className="flex gap-3 justify-center">
+                            <Tooltip title="Edit">
+                                <EditOutlined style={{ fontSize: 19 }} onClick={() => { editProduct(record.id) }} />
+                            </Tooltip>
+                            <Tooltip title="View">
+                                <EyeOutlined style={{ fontSize: 19 }} onClick={
+                                    () => {
+                                        Inertia.get(route('products.show', record, {
+                                            onError: () => { },
+                                            onSuccess: () => { },
+                                        }))
+                                    }} />
+                            </Tooltip>
+                            <Tooltip title="Inactive">
+                                <DeleteOutlined style={{ fontSize: 19 }} onClick={() => { showModal(record.id) }} />
+                            </Tooltip>
+                        </div>
                     </div>
                 )
             }
@@ -116,7 +111,7 @@ export default function Products(props) {
     };
 
     const handleOk = () => {
-        Inertia.put(route('products.inactive', { product: deletedProductId }), {}, {
+        Inertia.delete(route('products.destroy', { product: deletedProductId }), {}, {
             onSuccess: () => {
                 openNotification('success',
                     lang.get('strings.Successfully-Delete'),

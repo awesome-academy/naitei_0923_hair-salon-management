@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
-import { Form, Input, Select, Button, notification } from 'antd';
+import { Form, Input, Select, Button, notification, Switch } from 'antd';
 import { useLang } from '../../Context/LangContext';
 import { Inertia } from '@inertiajs/inertia'
 import 'antd/dist/antd.css';
@@ -9,6 +9,7 @@ import 'antd/dist/antd.css';
 export default function Create(props) {
     const { lang } = useLang();
     const [form] = Form.useForm();
+    const errorMessage = Object.values(props.errors).join('\n');
 
     const layout = {
         labelCol: {
@@ -26,6 +27,11 @@ export default function Create(props) {
     };
 
     const onFinish = (values) => {
+        if (values.is_active === false) {
+            values.is_active = 0;
+        } else if (values.is_active) {
+            values.is_active = 1;
+        }
 
         Inertia.post(route('products.store'), values, {
             onSuccess: () => {
@@ -37,7 +43,7 @@ export default function Create(props) {
             onError: (error) => {
                 openNotification('error',
                     lang.get('strings.Somethings-went-wrong'),
-                    error.store
+                    errorMessage
                 );
             }
         })
@@ -63,7 +69,6 @@ export default function Create(props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{lang.get('strings.dashboard')}</h2>}
         >
             <Head title="Create Product" />
 
@@ -143,6 +148,14 @@ export default function Create(props) {
                                 allowClear
                                 options={categoryOptions}
                             />
+                        </Form.Item>
+                        <Form.Item
+                            name="is_active"
+                            label="Active"
+                            valuePropName="checked"
+                            initialValue={false}
+                        >
+                            <Switch />
                         </Form.Item>
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">

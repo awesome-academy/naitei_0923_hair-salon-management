@@ -33,6 +33,7 @@ class StoreUserRequest extends FormRequest
             'phone' => 'string|required|unique:users,phone|max:30',
             'password' => ['required', Rules\Password::defaults()],
             'salon_role' => 'numeric|required|exists:salon_roles,id',
+            'is_active' => 'numeric|required',
         ];
     }
 }

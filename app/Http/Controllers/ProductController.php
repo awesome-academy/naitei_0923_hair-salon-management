@@ -84,6 +84,9 @@ class ProductController extends Controller
                     'is_active' => config('default_product_active'),
                     'description' => $validated['description'],
                     'category_id' => $validated['category'],
+                    'is_active' => $validated['is_active'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]
             );
         } catch (Exception $e) {
@@ -127,12 +130,15 @@ class ProductController extends Controller
         $product = Product::find($id);
         $categories = Category::where('salon_id', session('selectedSalon'))->select('id', 'name')->get()->toArray();
 
+        $categoryName = Category::where('id', $product->category_id)->get()->first()->name;
+
         return Inertia::render(
             'products/Edit.jsx',
             [
                 [
                     'product' => $product,
                     'categories' => $categories,
+                    'category' => $categoryName,
                 ],
             ]
         );
@@ -159,6 +165,7 @@ class ProductController extends Controller
                         'quantity' => $validated['quantity'],
                         'description' => $validated['description'],
                         'category_id' => $validated['category'],
+                        'is_active' => $validated['is_active'],
                     ]
                 );
         } catch (Exception $e) {
@@ -179,20 +186,14 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
-
-    public function inactive($id)
-    {
-        $product_active = collect(config('app.product_active'));
-        $unactive_id = $product_active->search('False');
+        $product = Product::find($id);
 
         try {
-            DB::table('products')->where('id', $id)->update(['is_active' => $unactive_id]);
+             $product->delete();
         } catch (Exception $e) {
             return redirect()->back()->withErrors(
                 [
-                    'inactive' => $e.getMessage(),
+                    'delete' => $e->getMessage(),
                 ]
             );
         }

@@ -1,53 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
-import { Form, Input, Select, Button, notification, Switch } from 'antd';
+import { Form, Input, Select, Button, notification, Switch} from 'antd';
 import { useLang } from '../../Context/LangContext';
 import { Inertia } from '@inertiajs/inertia'
 import 'antd/dist/antd.css';
 
 export default function Edit(props) {
-    const [product, setProduct] = useState(props[0].product);
+    const [user, setUser] = useState(props[0].user);
     const { lang } = useLang();
     const [form] = Form.useForm();
-    const categories = props[0].categories;
 
     useEffect(() => {
+
         fillInitialValue();
     }, []);
 
     const layout = {
         labelCol: {
-            span: 6,
+            span: 4,
         },
         wrapperCol: {
-            span: 12,
+            span: 8,
         },
     };
-
     const tailLayout = {
         wrapperCol: {
-            offset: 6,
-            span: 12,
+            offset: 4,
+            span: 8,
         },
     };
 
     const onFinish = (values) => {
+        
         if (values.is_active === false) {
             values.is_active = 0;
         } else if (values.is_active) {
             values.is_active = 1;
         }
 
-        if (typeof values.category === 'object' && values.category !== null) {
-            values.category = values.category.value;
-        }
-
-        Inertia.put(route('products.update', { id: product.id }), values, {
+        Inertia.put(route('users.update', { id: user.id }), values, {
             onSuccess: () => {
                 openNotification('success',
                     lang.get('strings.Successfully-Updated'),
-                    lang.get('strings.Product-Updated-Noti')
+                    lang.get('strings.User-Updated-Noti')
                 );
             },
             onError: (error) => {
@@ -60,17 +56,8 @@ export default function Edit(props) {
     };
 
     const fillInitialValue = () => {
-        form.setFieldsValue(product);
+        form.setFieldsValue(user);
     };
-
-    const categoryOptions = [];
-
-    categories.forEach((role) => {
-        categoryOptions.push({
-            label: role.name,
-            value: role.id,
-        })
-    });
 
     const openNotification = (type, message, description) => {
         notification[type]({
@@ -83,7 +70,6 @@ export default function Edit(props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{lang.get('strings.dashboard')}</h2>}
         >
             <Head title="Edit User" />
 
@@ -91,13 +77,13 @@ export default function Edit(props) {
                 <div className="w-full mx-auto sm:px-6 lg:px-8">
                     <div className="mb-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <h3 className="text-2xl leading-6 font-medium text-gray-900">
-                            {lang.get('strings.Edit-Product')}: {product.name}
+                            {lang.get('strings.Edit-User')}: {user.first_name + ' ' + user.last_name}
                         </h3>
                     </div>
                     <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
                         <Form.Item
-                            name="name"
-                            label="Name"
+                            name="first_name"
+                            label="First Name"
                             rules={[
                                 {
                                     required: true,
@@ -107,8 +93,8 @@ export default function Edit(props) {
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name="unit"
-                            label="Unit"
+                            name="last_name"
+                            label="Last Name"
                             rules={[
                                 {
                                     required: true,
@@ -118,8 +104,8 @@ export default function Edit(props) {
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name="cost"
-                            label="Cost"
+                            name="email"
+                            label="Email"
                             rules={[
                                 {
                                     required: true,
@@ -129,8 +115,8 @@ export default function Edit(props) {
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name="quantity"
-                            label="Quantity"
+                            name="phone"
+                            label="Phone"
                             rules={[
                                 {
                                     required: true,
@@ -138,41 +124,12 @@ export default function Edit(props) {
                             ]}
                         >
                             <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="description"
-                            label="Description"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="category"
-                            label="Category"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                            initialValue={{
-                                label: props[0].category,
-                                value: product.category_id,
-                            }}
-                        >
-                            <Select
-                                allowClear
-                                options={categoryOptions}
-                            />
                         </Form.Item>
                         <Form.Item
                             name="is_active"
                             label="Active"
                         >
-                            <Switch defaultChecked={product.is_active === 1} />
+                            <Switch defaultChecked={user.is_active === 1} />
                         </Form.Item>
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">

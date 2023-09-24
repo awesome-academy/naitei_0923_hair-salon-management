@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UpdateStaffRequest;
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\SystemRole;
+use App\Models\SalonRole;
 use Inertia\Inertia;
 use Redirect;
 use Exception;
@@ -98,7 +99,7 @@ class StaffController extends Controller
                             'first_name' => $validated['first_name'],
                             'last_name' => $validated['last_name'],
                             'phone' => $validated['phone'],
-                            'is_active' => $active_id,
+                            'is_active' => $validated['is_active'],
                             'created_at' => now(),
                             'updated_at' => now(),
                         ]
@@ -136,6 +137,14 @@ class StaffController extends Controller
         $is_active = config('app.user_active')[$staff->is_active];
         $staff->is_active = $is_active;
 
+        $salonRoleId = DB::table('salon_user')->where('user_id', $staff->id)
+            ->where('salon_id', session('selectedSalon'))
+            ->get()->first()->salon_role_id;
+
+        $salonRole = SalonRole::find($salonRoleId)->name;
+
+        $staff->salon_role = $salonRole;
+
         return Inertia::render(
             'staffs/Show.jsx',
             [
@@ -158,12 +167,19 @@ class StaffController extends Controller
 
         $salonRoles = DB::table('salon_roles')->select('id', 'name')->get()->toArray();
 
+        $salonRoleId = DB::table('salon_user')->where('user_id', $id)->where('salon_id', session('selectedSalon'))
+            ->get()->first()->salon_role_id;
+
+        $salonRole = SalonRole::find($salonRoleId)->name;
+
         return Inertia::render(
             'staffs/Edit.jsx',
             [
                 [
                     'staff' => $staff,
                     'salonRoles' => $salonRoles,
+                    'salonRole' => $salonRole,
+                    'salonRoleId' => $salonRoleId,
                 ],
             ]
         );
@@ -176,7 +192,7 @@ class StaffController extends Controller
      * @param  int                      $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUserRequest $request, $id)
+    public function update(UpdateStaffRequest $request, $id)
     {
         try {
             $validated = $request->validated();
@@ -189,6 +205,7 @@ class StaffController extends Controller
                                 'first_name' => $validated['first_name'],
                                 'last_name' => $validated['last_name'],
                                 'phone' => $validated['phone'],
+                                'is_active' => $validated['is_active']
                             ]
                         );
 
@@ -216,19 +233,22 @@ class StaffController extends Controller
      */
     public function destroy($id)
     {
-    }
-
-    public function inActive($id)
-    {
-        $user_active = collect(config('app.user_active'));
-        $unactive_id = $user_active->search('False');
+        $user = User::find($id);
 
         try {
-            DB::table('users')->where('id', $id)->update(['is_active' => $unactive_id]);
+            DB::transaction(function () use ($user) {
+                $user->salons()->detach();
+
+                DB::table('order_product')
+                    ->where('staff_id', $user->id)
+                    ->update(['staff_id' => null]);
+
+                $user->delete();
+            }, config('database.connections.mysql.max_attempts'));
         } catch (Exception $e) {
             return redirect()->back()->withErrors(
                 [
-                    'inactive' => $e.getMessage(),
+                    'delete' => $e->getMessage(),
                 ]
             );
         }

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
 import { useLang } from '../../Context/LangContext';
-import { Button } from 'antd';
+import { Button, Tag } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import { Inertia } from '@inertiajs/inertia'
 import 'antd/dist/antd.css';
@@ -74,7 +74,7 @@ export default function Show(props) {
                                     {lang.get('strings.Status')}:
                                 </dt>
                                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {product.is_active}
+                                     {product.is_active === 1 ? <Tag color="#108ee9">{lang.get('strings.Active')}</Tag> : <Tag color="#f50">{lang.get('strings.Inactive')}</Tag>}
                                 </dd>
                             </div>
                             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

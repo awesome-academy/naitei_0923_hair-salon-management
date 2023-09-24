@@ -36,6 +36,10 @@ export default function Authenticated({ auth, children }) {
             key: 'salons.index',
             icon: <ShopOutlined />,
             label: lang.get('strings.Salon')
+        }, {
+            key: 'users.index',
+            icon: <UserOutlined />,
+            label: lang.get('strings.User')
         }
     ];
 

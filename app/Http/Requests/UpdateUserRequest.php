@@ -29,7 +29,7 @@ class UpdateUserRequest extends FormRequest
             'phone' => 'string|required|max:30',
             'first_name' => 'string|required|max:255',
             'last_name' => 'string|required|max:255',
-            'salon_role' => 'numeric|required|exists:salon_roles,id',
+            'is_active' => 'numeric|required',
         ];
     }
 }

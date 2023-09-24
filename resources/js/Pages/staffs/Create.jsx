@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
-import { Form, Input, Select, Button, notification } from 'antd';
+import { Form, Input, Select, Button, notification, Switch } from 'antd';
 import { useLang } from '../../Context/LangContext';
 import { Inertia } from '@inertiajs/inertia'
 import 'antd/dist/antd.css';
@@ -9,6 +9,7 @@ import 'antd/dist/antd.css';
 export default function Create(props) {
     const { lang } = useLang();
     const [form] = Form.useForm();
+    const errorMessage = Object.values(props.errors).join('\n');
 
     const layout = {
         labelCol: {
@@ -26,6 +27,12 @@ export default function Create(props) {
     };
 
     const onFinish = (values) => {
+        if (values.is_active === false) {
+            values.is_active = 0;
+        } else if (values.is_active) {
+            values.is_active = 1;
+        }
+
         Inertia.post(route('staffs.store'), values, {
             onSuccess: () => {
                 openNotification('success',
@@ -36,7 +43,7 @@ export default function Create(props) {
             onError: (error) => {
                 openNotification('error',
                     lang.get('strings.Somethings-went-wrong'),
-                    error.store
+                    errorMessage
                 );
             }
         })
@@ -80,7 +87,9 @@ export default function Create(props) {
                             rules={[
                                 {
                                     required: true,
+                                    message: lang.get('strings.First-Name-Required')
                                 },
+                                { min: 3, message: lang.get('strings.First-Name-Min-Length-3') },
                             ]}
                         >
                             <Input />
@@ -91,7 +100,9 @@ export default function Create(props) {
                             rules={[
                                 {
                                     required: true,
+                                    message: lang.get('strings.Last-Name-Required')
                                 },
+                                { min: 3, message: lang.get('strings.Last-Name-Min-Length-3') },
                             ]}
                         >
                             <Input />
@@ -102,6 +113,8 @@ export default function Create(props) {
                             rules={[
                                 {
                                     required: true,
+                                    type: "email",
+                                    message: lang.get('strings.Invalid-Email'),
                                 },
                             ]}
                         >
@@ -113,7 +126,9 @@ export default function Create(props) {
                             rules={[
                                 {
                                     required: true,
+                                     message: lang.get('strings.Phone-Number-Required')
                                 },
+                                { min: 5, message: lang.get('strings.Phone-Number-Min-Length-5') },
                             ]}
                         >
                             <Input />
@@ -126,6 +141,7 @@ export default function Create(props) {
                                     required: true,
                                     message: lang.get('strings.Please-Input-Password'),
                                 },
+                                { min: 8, message: lang.get('strings.Password-Min-Length-8') },
                             ]}
                         >
                             <Input.Password />
@@ -166,6 +182,14 @@ export default function Create(props) {
                                 allowClear
                                 options={roleOptions}
                             />
+                        </Form.Item>
+                        <Form.Item
+                            name="is_active"
+                            label="Active"
+                            valuePropName="checked"
+                            initialValue={false}
+                        >
+                            <Switch />
                         </Form.Item>
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">

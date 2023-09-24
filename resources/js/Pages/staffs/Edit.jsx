@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
-import { Form, Input, Select, Button, notification } from 'antd';
+import { Form, Input, Select, Button, notification, Switch } from 'antd';
 import { useLang } from '../../Context/LangContext';
 import { Inertia } from '@inertiajs/inertia'
 import 'antd/dist/antd.css';
@@ -32,7 +32,15 @@ export default function Edit(props) {
     };
 
     const onFinish = (values) => {
+        if (values.is_active === false) {
+            values.is_active = 0;
+        } else if (values.is_active) {
+            values.is_active = 1;
+        }
 
+        if (typeof values.salon_role === 'object' && values.salon_role !== null) {
+            values.salon_role = values.salon_role.value;
+        }
         Inertia.put(route('staffs.update', { id: staff.id }), values, {
             onSuccess: () => {
                 openNotification('success',
@@ -68,6 +76,8 @@ export default function Edit(props) {
             description: description,
         });
     };
+
+
 
     return (
         <Authenticated
@@ -137,11 +147,21 @@ export default function Edit(props) {
                                     required: true,
                                 },
                             ]}
+                            initialValue={{
+                                label: props[0].salonRole,
+                                value: props[0].salonRoleId,
+                            }}
                         >
                             <Select
                                 allowClear
                                 options={roleOptions}
                             />
+                        </Form.Item>
+                        <Form.Item
+                            name="is_active"
+                            label="Active"
+                        >
+                            <Switch defaultChecked={staff.is_active === 1} />
                         </Form.Item>
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
