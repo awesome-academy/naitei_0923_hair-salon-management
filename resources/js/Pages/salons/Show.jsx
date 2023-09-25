@@ -65,7 +65,7 @@ export default function DetailSalon(props) {
             description: description,
         });
     };
-    console.log(salon)
+
     return (
         <Authenticated
             auth={props.auth}

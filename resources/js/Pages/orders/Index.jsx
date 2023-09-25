@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
 import CustomTable from '@/Components/CustomeTable';
-import { Modal, Button, Tag, Input } from 'antd';
+import { Table, Modal, Select, Tag, notification } from 'antd';
 import { useLang } from '../../Context/LangContext';
 import { DeleteOutlined, FileDoneOutlined, ExclamationCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { Inertia } from "@inertiajs/inertia";
@@ -50,6 +50,23 @@ export default function Index(props) {
             description: description,
         });
     };
+
+    const orderStatusChange = (orderId, value) => {
+        Inertia.put(route('orders.update', { order: orderId , status: value}), {} , {
+            onSuccess: () => {
+                openNotification('success',
+                    lang.get('strings.Successfully-Updated'),
+                    lang.get('strings.Order-Successfully-Updated')
+                );
+            },
+            onError: (error) => {
+                openNotification('error',
+                    lang.get('strings.Somethings-went-wrong'),
+                    error.update,
+                );
+            },
+        });
+    }
 
     const showDeleteConfirm = (id) => {
         confirm({
@@ -114,6 +131,35 @@ export default function Index(props) {
             dataIndex: 'status',
             filters: filters_status,
             onFilter: (value, record) => record.status === value,
+            render: (_, record ) => {
+                return (
+                    <Select
+                        defaultValue={record.status}
+                        style={{
+                            width: 120,
+                        }}
+                        onChange={(value) => {orderStatusChange(record.id, value)}}
+                        options={[
+                            {
+                                label: 'Prepare',
+                                value: 'Prepare'
+                            },
+                            {
+                                label: 'In Process',
+                                value: 'In Process'
+                            },
+                            {
+                                label: 'Done',
+                                value: 'Done'
+                            },
+                            {
+                                label: 'Cancel',
+                                value: 'Cancel'
+                            }, 
+                        ]}
+                    />
+                )
+            }
         },
         {
             title: lang.get('strings.Action'),
@@ -123,12 +169,12 @@ export default function Index(props) {
                     <div className="flex gap-3 justify-center">
                         <EyeOutlined style={{ fontSize: 19 }} title={lang.get('strings.Detail')} onClick={
                             () => {
-                                Inertia.get(route('orders.show', { order : record.id }));
+                                Inertia.get(route('orders.show', { order: record.id }));
                             }} />
                         <FileDoneOutlined style={{ fontSize: 19 }} title={lang.get('strings.Detail-Bill')} onClick={
                             () => {
-                                Inertia.get(route('bills.show', { order : record.id }));
-                            }}/>
+                                Inertia.get(route('bills.show', { order: record.id }));
+                            }} />
                         <DeleteOutlined style={{ fontSize: 19 }} title={lang.get('strings.Delete')} onClick={() => {
                             showDeleteConfirm(record.id)
                         }} />
@@ -162,7 +208,7 @@ export default function Index(props) {
                     <CustomTable
                         bordered
                         columns={columns}
-                        dataSource={orders.map(order => { return {...order, customer:order.customer.name}})}
+                        dataSource={orders.map(order => { return { ...order, customer: order.customer === null ? '' : order.customer.name } })}
                         onChange={onTableChange} />
                 </div>
             </div>

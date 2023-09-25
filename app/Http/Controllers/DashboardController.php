@@ -14,11 +14,8 @@ class DashboardController extends Controller
     
     public function index()
     {
-        $latestSerial = Order::whereDate('created_at', today())->latest()->first();
-        $nextSerial = $latestSerial ? $latestSerial->id + 1 : 1;
-
-        $lastOrderId = DB::table('orders')->max('id');
-        $lastCustomerId = DB::table('customers')->max('id');
+        $latestSerial = Order::where('salon_id', session('selectedSalon'))->whereDate('created_at', today())->count();
+        $nextSerial = $latestSerial ? $latestSerial + 1 : 1;
 
         $products = Product::all()->map(
             function ($item, $key) {
@@ -26,10 +23,14 @@ class DashboardController extends Controller
             }
         );
 
+        $customers = Customer::where('salon_id', session('selectedSalon'))->get()->map(
+            function ($item, $key) {
+                return $item->only(['id', 'phone']);
+            }
+        );
+
         $nextOrder = [
             'next_serial' => $nextSerial,
-            'order_id' => $lastOrderId ? $lastOrderId + 1 : 1,
-            'customer_id' => $lastCustomerId ? $lastCustomerId + 1 : 1,
             'products' => $products,
         ];
 
@@ -38,7 +39,8 @@ class DashboardController extends Controller
             [
                 [
                     'nextOrder' => $nextOrder,
-                    'selectedSalon' => session('selectedSalon'),
+                    'salon' => session('selectedSalon'),
+                    'customers' => $customers,
                 ],
             ]
         );
