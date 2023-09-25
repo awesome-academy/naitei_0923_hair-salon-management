@@ -19,7 +19,11 @@ export default function Show(props) {
         updatedAt: lang.get('strings.Updated_at'),
         edit: lang.get('strings.Edit'),
         active: lang.get('strings.Active'),
-        inactive: lang.get('strings.Inactive')
+        inactive: lang.get('strings.Inactive'),
+        firstName: lang.get('strings.First-Name'),
+        lastName: lang.get('strings.Last-Name'),
+        staff: lang.get('strings.Staff'),
+        role: lang.get('strings.Role'),
     }
 
     return (

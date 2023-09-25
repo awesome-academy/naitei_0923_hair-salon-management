@@ -4,21 +4,20 @@ import { Head } from '@inertiajs/inertia-react';
 import { useLang } from '../../Context/LangContext';
 import CustomTable from '@/Components/CustomeTable';
 import { Input, Modal, notification, Tag, Button, Tooltip } from 'antd';
-import { EditOutlined, EyeOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { EditOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Inertia } from '@inertiajs/inertia'
 import 'antd/dist/antd.css';
 
-export default function Staffs(props) {
-
-    const [staffs, setStaffs] = useState(props[0].staffs);
+export default function Users(props) {
+    const [users, setUsers] = useState(props.users);
+    const [deletedUserId, setDeletedUserId] = useState('');
     const [searchValue, setSearchValue] = useState('');
-    const [deletedStaffId, setDeletedStaffId] = useState(0);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const { lang } = useLang();
     const { Search } = Input;
 
     useEffect(() => {
-        setStaffs(props[0].staffs.filter(item => (
+        setUsers(props.users.filter(item => (
             item.id.toString().includes(searchValue.toString()) ||
             item.phone.toLowerCase().includes(searchValue.toLowerCase()) ||
             item.email.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -49,8 +48,19 @@ export default function Staffs(props) {
             dataIndex: 'phone',
         },
         {
-            title: lang.get('strings.Role'),
-            dataIndex: 'role',
+            title: lang.get('strings.Salon'),
+            render: (_, { salon_names }) => (
+                <>
+                    {salon_names.map((salon, id) => {
+                        return (
+                            <Tag key={id} color="#108ee9">
+                                {salon}
+                            </Tag>
+                        );
+                    })}
+                </>
+            )
+
         },
         {
             title: lang.get('strings.Action'),
@@ -69,7 +79,6 @@ export default function Staffs(props) {
             render: (text, record) => {
                 return (
                     <div>
-
                         <div className="flex gap-3 justify-center">
                             <Tooltip title="Edit">
                                 <EditOutlined style={{ fontSize: 19 }} onClick={() => { editUser(record.id) }} />
@@ -77,13 +86,13 @@ export default function Staffs(props) {
                             <Tooltip title="View">
                                 <EyeOutlined style={{ fontSize: 19 }} onClick={
                                     () => {
-                                        Inertia.get(route('staffs.show', record, {
+                                        Inertia.get(route('users.show', record), {}, {
                                             onError: () => { },
                                             onSuccess: () => { },
-                                        }))
+                                        })
                                     }} />
                             </Tooltip>
-                            <Tooltip title="Inactive">
+                            <Tooltip title="Delete">
                                 <DeleteOutlined style={{ fontSize: 19 }} onClick={() => showModal(record.id)} />
                             </Tooltip>
                         </div>
@@ -102,16 +111,16 @@ export default function Staffs(props) {
     }
 
     const showModal = (id) => {
-        setDeletedStaffId(id);
+        setDeletedUserId(id);
         setIsDeleteModalOpen(true);
     };
 
-    const handleOk = () => {
-        Inertia.delete(route('staffs.destroy', { staff: deletedStaffId }), {}, {
+    const handleOk = (id) => {
+        Inertia.delete(route('users.destroy', { user: id }), {}, {
             onSuccess: () => {
                 openNotification('success',
                     lang.get('strings.Successfully-Delete'),
-                    lang.get('strings.Staff-Deleted-Noti')
+                    lang.get('strings.User-Deleted-Noti')
                 );
             },
             onError: (error) => {
@@ -137,40 +146,28 @@ export default function Staffs(props) {
     };
 
     const editUser = (id) => {
-        Inertia.get(route('staffs.edit', { staff: id }))
-    }
-
-    const createStaff = () => {
-        Inertia.get(route('staffs.create'))
+        Inertia.get(route('users.edit', { user: id }));
     }
 
     return (
         <Authenticated
             auth={props.auth}
             errors={props.errors}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{lang.get('strings.dashboard')}</h2>}
         >
             <Head title="Dashboard" />
             <Modal
                 title="Delete User"
                 open={isDeleteModalOpen}
-                onOk={() => { handleOk() }}
+                onOk={() => { handleOk(deletedUserId) }}
                 onCancel={handleCancel}
             >
-                <p className="font-semibold text-xl text-rose-600 leading-tight">{lang.get('strings.Delete-Staff-Confirm')}</p>
+                <p className="font-semibold text-xl text-rose-600 leading-tight">{lang.get('strings.Delete-User-Confirm')}</p>
             </Modal>
             <div className="py-12">
                 <div className='sm:px-6 lg:px-8 w-full'>
-                    <h2 className='font-semibold text-2xl text-gray-800 leading-tight'>{lang.get('strings.Staffs')}</h2>
+                    <h2 className='font-semibold text-2xl text-gray-800 leading-tight'>{lang.get('strings.Users')}</h2>
                 </div>
-                <div className="flex gap-4 justify-between w-full mr:3 mb-8 sm:px-6 lg:px-8 mt-8">
-                    <Button
-                        icon={<PlusCircleOutlined />}
-                        type="primary"
-                        shape="round"
-                        size={"large"}
-                        onClick={createStaff}
-                    >{lang.get('strings.Create-Staff')}</Button>
+                <div className="flex gap-4 justify-end w-full mr:3 mb-8 sm:px-6 lg:px-8 mt-8">
                     <Search placeholder="input id, phone, email or name"
                         onChange={searchChangeHandler}
                         enterButton
@@ -186,7 +183,7 @@ export default function Staffs(props) {
                     <CustomTable
                         bordered
                         columns={columns}
-                        dataSource={staffs}
+                        dataSource={users}
                         onChange={onTableChange}
                         onRow={(record, index) => ({
                             style: {
@@ -194,7 +191,6 @@ export default function Staffs(props) {
                             }
                         })}
                     />
-
                 </div>
             </div>
         </Authenticated>

@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\SelectWorkingSalonController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BillController;
@@ -61,6 +62,9 @@ Route::middleware(['superAdmin'])->group(
                 'reject',
             ]
         )->name('registrations.reject');
+
+        Route::resource('salons', SalonController::class);
+        Route::resource('users', UserController::class);
     }
 );
 
@@ -70,17 +74,16 @@ Route::get(
 )->middleware(['auth', 'verified', 'salonManager'])->name('dashboard');
 
 Route::middleware(['auth', 'verified', 'salonManager'])->group(function () {
+    Route::resource('/customers', CustomerController::class);
     Route::resource('/products', ProductController::class);
     Route::resource('/categories', CategoryController::class);
+    Route::resource('staffs', StaffController::class);
 
     Route::get('/bills/order/{order}', [BillController::class, 'show'])->name('bills.show');
     Route::post('/bills/order/{order}', [BillController::class, 'store'])->name('bills.store');
 
     Route::put('/products/{product}/inactive', [ProductController::class, 'inactive'])->name('products.inactive');
 });
-
-Route::resource('salons', SalonController::class)->middleware('superAdmin');
-Route::resource('staffs', StaffController::class)->middleware('auth', 'verified');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/orders', OrderController::class);
@@ -89,8 +92,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('select-working-salon', [SelectWorkingSalonController::class, 'select'])->name('selectSalon.select');
 });
 
-Route::put('staffs/{staff}/inactive', [StaffController::class, 'inActive'])
-    ->middleware('auth', 'verified')->name('staffs.inActive');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
