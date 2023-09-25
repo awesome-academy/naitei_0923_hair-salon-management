@@ -47,7 +47,7 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $request)
     {
         $validated = $request->validated();
-        
+
         $order_status = collect(config('app.order_status'));
         $prepare_id = $order_status->search('Prepare');
 
@@ -74,7 +74,7 @@ class OrderController extends Controller
                             'updated_at' => now(),
                         ]
                     );
-                    
+
                     $data = [];
 
                     $products = $request->input('products');
@@ -113,6 +113,10 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
+        if ($order->salon_id != session('selectedSalon')) {
+            abort(403);
+        }
+
         return Inertia::render(
             'orders/Show.jsx',
             [
