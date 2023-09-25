@@ -64,8 +64,8 @@ export default function Index(props) {
                 <PageHeader ghost={false} title={lang.get('strings.Show-Order')} subTitle={lang.get("strings.Order-Information")} >
                     <div className="max-w-full mx-auto sm:px-6 lg:px-8">
                         <Descriptions size="small" column={3}>
-                            <Descriptions.Item label={lang.get('strings.Customer-Name')}>{order.customer.name}</Descriptions.Item>
-                            <Descriptions.Item label={lang.get('strings.Customer-Phone')}>{order.customer.phone} </Descriptions.Item>
+                            <Descriptions.Item label={lang.get('strings.Customer-Name')}>{order.customer === null ? '' : order.customer.name}</Descriptions.Item>
+                            <Descriptions.Item label={lang.get('strings.Customer-Phone')}>{order.customer === null ? '' :order.customer.phone} </Descriptions.Item>
                             <Descriptions.Item label={lang.get('strings.Time-Order')}>{order.time_order}</Descriptions.Item>
                             <Descriptions.Item label={lang.get('strings.Serial')}>{order.serial}</Descriptions.Item>
                             <Descriptions.Item label={lang.get('strings.Status')}>{order.status}</Descriptions.Item>

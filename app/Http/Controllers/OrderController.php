@@ -56,32 +56,34 @@ class OrderController extends Controller
         try {
             DB::transaction(
                 function () use ($validated, $request, $prepare_id) {
-                    DB::table('customers')->insert(
-                        [
-                            'id' => $validated['customerId'],
-                            'salon_id' => $validated['salonId'],
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]
-                    );
-
-                    DB::table('orders')->insert(
-                        [
-                            'customer_id' => $validated['customerId'],
-                            'salon_id' => $validated['salonId'],
-                            'status' => $prepare_id,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]
-                    );
-
+                    if ($validated['customerId'] > -1) {
+                        $lastInsertedOrderId = DB::table('orders')->insertGetId(
+                            [
+                                'customer_id' => $validated['customerId'],
+                                'salon_id' => $validated['salonId'],
+                                'status' => $prepare_id,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]
+                        );
+                    } else {
+                        $lastInsertedOrderId = DB::table('orders')->insertGetId(
+                            [
+                                'salon_id' => $validated['salonId'],
+                                'status' => $prepare_id,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]
+                        );
+                    }
+                    
                     $data = [];
 
                     $products = $request->input('products');
 
                     foreach ($products as $productId => $quantity) {
                         $data[] = [
-                            'order_id' => $validated['orderId'],
+                            'order_id' => $lastInsertedOrderId,
                             'product_id' => $productId,
                             'quantity' => $quantity,
                             'status' => $prepare_id,
@@ -145,7 +147,35 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        $request->status = collect(config('app.order_status'))->search($request->status);
+
+        $cancelId = collect(config('app.order_status'))->search('Cancel');
+        $doneId = collect(config('app.order_status'))->search('Done');
+
+        try {
+            DB::transaction(
+                function () use ($request, $order, $cancelId, $doneId) {
+                    $order->update(
+                        [
+                            'status' => $request->status,
+                        ]
+                    );
+
+                    DB::table('order_product')->where('order_id', $order->id)
+                        ->where('status', '<>', $cancelId)
+                        ->update(['status' => $doneId]);
+                },
+                config('database.connections.mysql.max_attempts')
+            );
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(
+                [
+                    'update' => $e->getMessage(),
+                ]
+            );
+        }
+
+        return redirect()->route('orders.index');
     }
 
     /**
@@ -156,10 +186,13 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        DB::transaction(function () use ($order) {
-            $order->products()->detach();
-            $order->delete();
-        }, config('database.connections.mysql.max_attempts'));
+        DB::transaction(
+            function () use ($order) {
+                $order->products()->detach();
+                $order->delete();
+            },
+            config('database.connections.mysql.max_attempts')
+        );
 
         return redirect()->route('orders.index');
     }
