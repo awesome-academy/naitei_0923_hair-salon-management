@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SalonController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\SelectWorkingSalonController;
 use App\Http\Controllers\StaffController;
@@ -65,11 +66,9 @@ Route::middleware(['superAdmin'])->group(
 Route::get(
     '/dashboard',
     [DashboardController::class, 'index']
-)->middleware(['auth', 'verified'])->name('dashboard');
+)->middleware(['auth', 'verified', 'salonManager'])->name('dashboard');
 
-Route::middleware(['auth', 'salonManager'])->group(function () {
-    Route::resource('/orders', OrderController::class);
-    Route::resource('/customers', CustomerController::class);
+Route::middleware(['auth', 'verified', 'salonManager'])->group(function () {
     Route::resource('/products', ProductController::class);
 
     Route::put('/products/{product}/inactive', [ProductController::class, 'inactive'])->name('products.inactive');
@@ -80,11 +79,20 @@ Route::resource('staffs', StaffController::class)->middleware('auth', 'verified'
 Route::resource('categories', CategoryController::class)->middleware('auth', 'verified');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('/orders', OrderController::class);
+    Route::resource('/customers', CustomerController::class);
     Route::get('select-working-salon/{id}', [SelectWorkingSalonController::class, 'index'])->name('selectSalon.show');
     Route::post('select-working-salon', [SelectWorkingSalonController::class, 'select'])->name('selectSalon.select');
 });
 
 Route::put('staffs/{staff}/inactive', [StaffController::class, 'inActive'])
     ->middleware('auth', 'verified')->name('staffs.inActive');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
 
 require __DIR__.'/auth.php';

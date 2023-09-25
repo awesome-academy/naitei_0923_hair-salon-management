@@ -16,10 +16,17 @@ class RegistrationController extends Controller
             $registration->status = config('app.registration_status')[$registration->status];
         }
 
+        $sortedRegistrations = $registrations->sortBy(
+            [
+                ['status', 'desc'],
+                ['created_at', 'desc'],
+            ]
+        );
+
         return Inertia::render(
             'Registrations',
             [
-                'registrations' => $registrations,
+                'registrations' => $sortedRegistrations,
             ]
         );
     }

@@ -4,7 +4,7 @@ import Button from '@/Components/Button';
 import { Head } from '@inertiajs/inertia-react';
 import { useLang } from '../Context/LangContext';
 import CustomTable from '@/Components/CustomeTable';
-import { Input, notification, Tag, Modal } from 'antd';
+import { Input, notification, Tag } from 'antd';
 import { Inertia } from '@inertiajs/inertia'
 import 'antd/dist/antd.css';
 
@@ -14,8 +14,6 @@ export default function Registrations(props) {
     const [searchValue, setSearchValue] = useState('');
     const { lang } = useLang();
     const { Search } = Input;
-    const { confirm } = Modal;
-
 
     useEffect(() => {
         setRegistrations(props.registrations.filter(item => (
@@ -30,7 +28,6 @@ export default function Registrations(props) {
     const accept = (e, record) => {
 
         e.preventDefault();
-
         Inertia.post('/salons', record, {
             onSuccess: () => {
                 openNotification('success',
@@ -148,7 +145,7 @@ export default function Registrations(props) {
                                 <div className='flex gap-x-1.5'>
                                     <form onSubmit={(e) => { accept(e, record) }}>
                                         <div>
-                                            <Button type="submit" className="hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Accept')}
+                                            <Button disabled={true} type="submit" className="hover:bg-slate-300 hover:text-gray-950">{lang.get('strings.Accept')}
                                             </Button>
                                         </div>
                                     </form>

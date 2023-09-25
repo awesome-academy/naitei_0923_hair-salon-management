@@ -45,7 +45,6 @@ export default function DetailSalon (props) {
     };
     
     const onFinishFailed = (errorInfo) => {
-        
     };
 
     return (

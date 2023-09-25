@@ -162,8 +162,10 @@ class OrderController extends Controller
 
     private function transformOrder()
     {
-        $orders = Order::with(['customer', 'products'])->whereDate('created_at', now()->toDateString())
-            ->orderByDesc('created_at')->get();
+        $orders = Order::with(['customer', 'products'])->where('salon_id', session('selectedSalon'))
+            ->whereDate('created_at', now()->toDateString())
+            ->orderByDesc('created_at')
+            ->get();
         $count = count($orders);
 
         foreach ($orders as $order) {

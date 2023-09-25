@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { Button, notification, Modal } from 'antd';
-import { EditOutlined, DeleteOutlined} from '@ant-design/icons';
+import { Button, notification, Modal, Tag } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import { useLang } from '../../Context/LangContext';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
 
-export default function DetailSalon (props) {
+export default function DetailSalon(props) {
     const [isEditting, setIsEditting] = useState(false);
     const { lang } = useLang();
     const [salon, setSalon] = useState(props[0].salon);
 
     const editSalon = (e) => {
-        
+
     };
 
     const showDeleteModal = (record) => {
@@ -23,9 +23,9 @@ export default function DetailSalon (props) {
             closable: true,
             okText: lang.get('strings.Delete'),
             onOk: () => handleOkDeleteModal(modalDelete, record),
-            content:(
+            content: (
                 <>
-                    <h2 style={{color: '#FF3355'}}>{lang.get('strings.Confirm-Delete-Salon')}</h2>
+                    <h2 style={{ color: '#FF3355' }}>{lang.get('strings.Confirm-Delete-Salon')}</h2>
                     <h4>
                         <b>{lang.get('Salon-ID')}:</b> {record.id}
                     </h4>
@@ -36,7 +36,7 @@ export default function DetailSalon (props) {
             ),
         })
     };
-  
+
     const handleOkDeleteModal = (modalDelete, record) => {
         modalDelete.destroy();
         deleteSalon(record);
@@ -65,7 +65,7 @@ export default function DetailSalon (props) {
             description: description,
         });
     };
-
+    console.log(salon)
     return (
         <Authenticated
             auth={props.auth}
@@ -73,17 +73,17 @@ export default function DetailSalon (props) {
         >
             <Head title="Salon Detail" />
             <div className="py-12">
-                <div className='sm:px-6 lg:px-8 w-full'>
+                <div className='sm:px-4 lg:px-6 w-full'>
                     <h2 className='font-semibold text-2xl text-gray-800 leading-tight'>{lang.get('strings.Detail-Salon')}</h2>
-                </div> 
+                </div>
                 <div className="bg-white w-full shadow overflow-hidden sm:rounded-lg">
-                    <div className="px-4 py-7 sm:px-6">
+                    <div className="px-5 py-7 sm:px-6">
                         <div className='flex justify-between'>
                             <h3 className="text-2xl leading-6 font-semibold text-sky-900 max-w-2xl">
                                 {salon.name}
                             </h3>
                             <div className='flex space-x-4'>
-                                <a href={route('salons.edit', {salon : salon.id})}>
+                                <a href={route('salons.edit', { salon: salon.id })}>
                                     <Button type="primary" shape="round" icon={<EditOutlined />} size={'large'} onClick={editSalon}>
                                         {lang.get('strings.Edit')}
                                     </Button>
@@ -134,6 +134,15 @@ export default function DetailSalon (props) {
                                 </dt>
                                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                     {salon.num_customers + ' / ' + salon.package.customer_number}
+                                </dd>
+                            </div>
+                            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt className="text-md font-medium text-gray-500">
+                                    <b>{lang.get('strings.Status')}:</b>
+                                </dt>
+                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    {salon.is_active === 'True' ? <Tag color="#108ee9">{lang.get('strings.Active')}</Tag>
+                                        : <Tag size="large" color="#f50">{lang.get('strings.Inactive')}</Tag>}
                                 </dd>
                             </div>
                             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

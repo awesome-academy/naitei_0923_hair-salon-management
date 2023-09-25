@@ -20,12 +20,18 @@ class CheckSalonManager
     public function handle(Request $request, Closure $next)
     {
         $user = auth()->user();
+
+        if ($user->system_role === 'super admin') {
+            abort(401);
+        }
+
         $selectedSalonId = $request->session()->get('selectedSalon');
         $salonRoleId =  DB::table('salon_user')->where('user_id', $user->id)->where('salon_id', $selectedSalonId)
             ->get()->first()->salon_role_id;
 
-        if ($user && SystemRole::find($user->system_role_id)->name == 'user' &&
-            SalonRole::find($salonRoleId)->name == 'manager') {
+        if ($user && $user->systemRole->name == 'user'
+            && SalonRole::find($salonRoleId)->name == 'manager'
+        ) {
             return $next($request);
         }
 
