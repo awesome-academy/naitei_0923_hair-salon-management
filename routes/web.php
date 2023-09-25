@@ -14,6 +14,7 @@ use App\Http\Controllers\SelectWorkingSalonController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BillController;
 use App\Models\Category;
 
 /*
@@ -70,13 +71,16 @@ Route::get(
 
 Route::middleware(['auth', 'verified', 'salonManager'])->group(function () {
     Route::resource('/products', ProductController::class);
+    Route::resource('/categories', CategoryController::class);
+
+    Route::get('/bills/order/{order}', [BillController::class, 'show'])->name('bills.show');
+    Route::post('/bills/order/{order}', [BillController::class, 'store'])->name('bills.store');
 
     Route::put('/products/{product}/inactive', [ProductController::class, 'inactive'])->name('products.inactive');
 });
 
 Route::resource('salons', SalonController::class)->middleware('superAdmin');
 Route::resource('staffs', StaffController::class)->middleware('auth', 'verified');
-Route::resource('categories', CategoryController::class)->middleware('auth', 'verified');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/orders', OrderController::class);
