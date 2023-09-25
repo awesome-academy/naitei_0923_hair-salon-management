@@ -228,5 +228,7 @@
     "Error-Payment-When-Products-Not-Done": "Cannot pay when the products is not 'Done'",
     "Error-Payment-When-Paid": "The order has been 'Paid' previously",
     "Payment-Successful": "Payment Successful",
-    "Order-Payment-Successful": "Order payment successful. Transaction has been stored."
+    "Order-Payment-Successful": "Order payment successful. Transaction has been stored.",
+    "Yes" : "Yes",
+    "No" : "No"
 }
