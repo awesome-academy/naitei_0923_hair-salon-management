@@ -19,6 +19,7 @@ class ProductFactory extends Factory
             'name' => $this->faker->text(10),
             'unit' => $this->faker->text(),
             'cost' => $this->faker->randomNumber(),
+            'quantity' =>$this->faker->randomNumber(),
             'description' => $this->faker->text(),
             'is_active' => true,
             'created_at' => now(),

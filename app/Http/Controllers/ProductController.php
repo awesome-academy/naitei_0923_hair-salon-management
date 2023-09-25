@@ -19,7 +19,13 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $salonId = session('selectedSalon');
+        $products = Product::whereHas(
+            'category',
+            function ($query) use ($salonId) {
+                $query->where('salon_id', $salonId);
+            }
+        )->get();
 
         foreach ($products as $product) {
             $product->category = Category::find($product->category_id)->name;
@@ -47,7 +53,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::select('id', 'name')->get()->toArray();
+        $categories = Category::where('salon_id', session('selectedSalon'))->select('id', 'name')->get()->toArray();
         return Inertia::render(
             'products/Create.jsx',
             [
@@ -74,6 +80,8 @@ class ProductController extends Controller
                     'name' => $validated['name'],
                     'unit' => $validated['unit'],
                     'cost' => $validated['cost'],
+                    'quantity' => $validated['quantity'],
+                    'is_active' => config('default_product_active'),
                     'description' => $validated['description'],
                     'category_id' => $validated['category'],
                 ]
@@ -117,7 +125,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::find($id);
-        $categories = Category::select('id', 'name')->get()->toArray();
+        $categories = Category::where('salon_id', session('selectedSalon'))->select('id', 'name')->get()->toArray();
 
         return Inertia::render(
             'products/Edit.jsx',
@@ -148,6 +156,7 @@ class ProductController extends Controller
                         'name' => $validated['name'],
                         'unit' => $validated['unit'],
                         'cost' => $validated['cost'],
+                        'quantity' => $validated['quantity'],
                         'description' => $validated['description'],
                         'category_id' => $validated['category'],
                     ]

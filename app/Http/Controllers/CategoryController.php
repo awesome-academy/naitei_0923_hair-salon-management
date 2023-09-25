@@ -195,6 +195,11 @@ class CategoryController extends Controller
         
         $product_number = 0;
 
+        foreach ($products as $product) {
+            $product_number += $product->quantity;
+            $product->is_active = config('app.product_active')[$product->is_active];
+        }
+
         $category->product_number = $product_number;
 
         return $category;

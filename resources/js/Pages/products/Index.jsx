@@ -54,6 +54,10 @@ export default function Products(props) {
             align: 'center'
         },
         {
+            title: lang.get('strings.Quantity'),
+            dataIndex: 'quantity',
+        },
+        {
             title: lang.get('strings.Action'),
             align: 'center',
             filters: [

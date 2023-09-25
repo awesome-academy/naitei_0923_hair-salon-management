@@ -263,5 +263,7 @@ return [
     'category_active' => [
         0 => 'False',
         1 => 'True',
-    ]
+    ],
+
+    'default_product_active' => 1
 ];
