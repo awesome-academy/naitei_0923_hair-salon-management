@@ -20,7 +20,7 @@ class CustomerController extends Controller
     public function index()
     {
         return Inertia::render('customers/Index.jsx', [
-            ['customers' => Customer::all()],
+            ['customers' => Customer::where('salon_id', session('selectedSalon'))->get()],
         ]);
     }
 
@@ -68,6 +68,10 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
+        if ($customer->salon_id != session('selectedSalon')) {
+            abort(403);
+        }
+
         return Inertia::render('customers/Show.jsx', [
             ['customer' => $this->detailCustomerPage($customer)],
         ]);

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
-import { Table, Modal, Button, Tag } from 'antd';
+import CustomTable from '@/Components/CustomeTable';
+import { Modal, Button, Tag, Input } from 'antd';
 import { useLang } from '../../Context/LangContext';
 import { DeleteOutlined, FileDoneOutlined, ExclamationCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { Inertia } from "@inertiajs/inertia";
@@ -11,6 +12,37 @@ export default function Index(props) {
     const [orders, setOrders] = useState(props[0].orders);
     const { lang } = useLang();
     const { confirm } = Modal;
+    const [searchValue, setSearchValue] = useState('');
+    const { Search } = Input;
+
+    useEffect(() => {
+        setOrders(props[0].orders.filter(item => (
+            item.serial.toString().includes(searchValue.toString()) ||
+            item.customer.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+            item.products.some((product) =>
+                product.name.toLowerCase().includes(searchValue.toLowerCase())
+            )
+        )));
+    }, [searchValue]);
+
+    const searchChangeHandler = (e) => {
+        e.preventDefault();
+
+        setSearchValue(e.target.value);
+    }
+
+    const filters_status = orders.map(
+        order => {
+            return {
+                text: order.status,
+                value: order.status,
+            }
+        }
+    ).filter(
+        (item, index, self) => {
+            return self.findIndex((otherItem) => otherItem.text === item.text) === index;
+        }
+    );
 
     const openNotification = (type, message, description) => {
         notification[type]({
@@ -80,6 +112,8 @@ export default function Index(props) {
         {
             title: lang.get('strings.Status'),
             dataIndex: 'status',
+            filters: filters_status,
+            onFilter: (value, record) => record.status === value,
         },
         {
             title: lang.get('strings.Action'),
@@ -117,8 +151,15 @@ export default function Index(props) {
             <Head title={lang.get('strings.List-Order')} />
 
             <div className="py-12">
+                <div className='sm:px-6 lg:px-8 w-full'>
+                    <h2 className='font-semibold text-2xl text-gray-800 leading-tight'>{lang.get('strings.List-Order')}</h2>
+                </div>
+                <div className="flex justify-end w-full mr:3 mb-8 sm:px-6 lg:px-8">
+                    <Search placeholder="input serial, customer name, ordered products" onChange={searchChangeHandler}
+                            enterButton bordered size="large" allowClear style={{ width: 304 }} />
+                </div>
                 <div className="max-w-full mx-auto sm:px-6 lg:px-8">
-                    <Table
+                    <CustomTable
                         bordered
                         columns={columns}
                         dataSource={orders.map(order => { return {...order, customer:order.customer.name}})}
