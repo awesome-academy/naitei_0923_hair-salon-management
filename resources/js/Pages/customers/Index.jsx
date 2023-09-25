@@ -18,6 +18,26 @@ export default function Staffs(props) {
     const [form] = Form.useForm();
     const [modalTitle, setModalTitle] = useState('');
     const [editMode, setEditMode] = useState(false);
+    const { Search } = Input;
+    const [searchValue, setSearchValue] = useState('');
+
+    useEffect(() => {
+        setCustomers(props[0].customers.filter(item => (
+            item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+            item.phone.toLowerCase().includes(searchValue.toLowerCase())
+        )));
+    }, [searchValue]);
+
+    const searchChangeHandler = (e) => {
+        e.preventDefault();
+
+        setSearchValue(e.target.value);
+    }
+
+    const filters_active = [
+        { text: lang.get('strings.Yes'), value: true },
+        { text: lang.get('strings.No'), value: false },
+    ];
 
     const showModal = () => {
         setModalTitle(lang.get('strings.Modal-Create-Customer'))
@@ -151,6 +171,12 @@ export default function Staffs(props) {
         {
             title: lang.get('strings.Active'),
             align: 'center',
+            filters: filters_active,
+            onFilter: (value, record) => {
+                if (record.is_active == value) {
+                    return true;
+                }
+            },
             render: (record) => {
                 return (
                     <Checkbox checked={record.is_active} />
@@ -198,6 +224,8 @@ export default function Staffs(props) {
                     <Button type="primary" shape="round" icon={<PlusCircleOutlined />} size={'large'} onClick={showModal}>
                         {lang.get('strings.Create-Customer')}
                     </Button>
+                    <Search placeholder="input name or phone" onChange={searchChangeHandler}
+                        enterButton bordered size="large" allowClear style={{ width: 304 }}/>
                 </div>
                 <div className="flex justify-end px-8">
                     <Modal title={modalTitle} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>

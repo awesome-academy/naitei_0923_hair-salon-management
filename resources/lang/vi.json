@@ -227,5 +227,7 @@
     "Error-Payment-When-Products-Not-Done": "Không thể thanh toán khi vẫn còn sản phẩm không ở trạng thái 'Done'",
     "Error-Payment-When-Paid": "Đơn hàng đã được thanh toán(Paid) trước đó",
     "Payment-Successful": "Thanh toán thành công",
-    "Order-Payment-Successful": "Thanh toán đơn hàng thành công. Giao dịch đã được lưu trữ."
+    "Order-Payment-Successful": "Thanh toán đơn hàng thành công. Giao dịch đã được lưu trữ.",
+    "Yes" : "Có",
+    "No" : "Không"
 }
