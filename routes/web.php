@@ -79,8 +79,6 @@ Route::middleware(['auth', 'verified', 'salonManager'])->group(function () {
     Route::resource('/categories', CategoryController::class);
     Route::resource('staffs', StaffController::class);
 
-    Route::get('/bills/order/{order}', [BillController::class, 'show'])->name('bills.show');
-    Route::post('/bills/order/{order}', [BillController::class, 'store'])->name('bills.store');
 
     Route::put('/products/{product}/inactive', [ProductController::class, 'inactive'])->name('products.inactive');
 });
@@ -90,6 +88,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/customers', CustomerController::class);
     Route::get('select-working-salon/{id}', [SelectWorkingSalonController::class, 'index'])->name('selectSalon.show');
     Route::post('select-working-salon', [SelectWorkingSalonController::class, 'select'])->name('selectSalon.select');
+    Route::get('/bills/order/{order}', [BillController::class, 'show'])->name('bills.show');
+    Route::post('/bills/order/{order}', [BillController::class, 'store'])->name('bills.store');
 });
 
 

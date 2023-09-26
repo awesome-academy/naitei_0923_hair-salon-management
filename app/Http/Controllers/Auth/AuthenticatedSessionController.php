@@ -51,6 +51,8 @@ class AuthenticatedSessionController extends Controller
         $salonNumber = DB::table('salon_user')->where('user_id', $userId)->count();
         
         if ($salonNumber == 1) {
+            $salonId = DB::table('salon_user')->where('user_id', $userId)->first()->salon_id;
+            $request->session()->put('selectedSalon', $salonId);
             return redirect()->route('orders.index');
         }
 

@@ -301,6 +301,7 @@ export default function Dashboard(props) {
                             onChange={(e) => onQuantityChange(product, e.target.value)} // Add this onChange handler
                             required
                             size="medium"
+                            min={1}
                         />
                     </Form.Item>
                 })}
