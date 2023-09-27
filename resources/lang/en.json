@@ -165,6 +165,7 @@
     "Owner-Email": "Owner Email",
     "Registration-Package": "Registration Package",
     "Staff-Number": "Staff Number",
+    "Seat-Number": "Seat Number",
     "Customer-Number": "Customer Number",
     "Action": "Action",
     "Serial": "Serial",
@@ -249,5 +250,11 @@
     "Payment-Successful": "Payment Successful",
     "Order-Payment-Successful": "Order payment successful. Transaction has been stored.",
     "Yes" : "Yes",
-    "No" : "No"
+    "No" : "No",
+    "Confirm-Password-Description": "This is a secure area of the application. Please confirm your password before continuing.",
+    "Forgot-Password-Description": "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.",
+    "Email-Verification": "Email-Verification",
+    "Verify-Email-Description": "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.",
+    "Resend-Verification-Email": "Resend Verification Email",
+    "Sent-Verification-Email-Description": "A new verification link has been sent to the email address you provided during registration."
 }

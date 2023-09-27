@@ -63,13 +63,13 @@ export default function Register(props) {
 
     return (
         <Guest>
-            <Head title="Register" />
+            <Head title={lang.get('strings.Register')} />
 
             <ValidationErrors errors={errors} />
 
-            <form onSubmit={submit}>
+            <form className="pb-20" onSubmit={submit}>
                 <div className="mt-4">
-                    <Label forInput="firstName" value="FirstName" />
+                    <Label forInput="firstName" value={lang.get('strings.First-Name')} />
 
                     <Input
                         type="text"
@@ -84,7 +84,7 @@ export default function Register(props) {
                 </div>
 
                 <div className="mt-4">
-                    <Label forInput="lastName" value="LastName" />
+                    <Label forInput="lastName" value={lang.get('strings.Last-Name')} />
 
                     <Input
                         type="text"
@@ -113,7 +113,7 @@ export default function Register(props) {
                 </div>
 
                 <div className="mt-4">
-                    <Label forInput="phoneNumber" value="Phone Number" />
+                    <Label forInput="phoneNumber" value={lang.get('strings.Phone')} />
 
                     <Input
                         type="text"
@@ -127,7 +127,7 @@ export default function Register(props) {
                 </div>
 
                 <div className="mt-4">
-                    <Label forInput="password" value="Password" />
+                    <Label forInput="password" value={lang.get('strings.Password')} />
 
                     <Input
                         type="password"
@@ -141,7 +141,7 @@ export default function Register(props) {
                 </div>
 
                 <div className="mt-4">
-                    <Label forInput="password_confirmation" value="Confirm Password" />
+                    <Label forInput="password_confirmation" value={lang.get('strings.Confirm-Password')} />
 
                     <Input
                         type="password"
@@ -154,7 +154,7 @@ export default function Register(props) {
                 </div>
 
                 <div className="mt-4">
-                    <Label forInput="salonName" value="SalonName" />
+                    <Label forInput="salonName" value={lang.get('strings.Salon-Name')}/>
 
                     <Input
                         type="text"
@@ -168,7 +168,7 @@ export default function Register(props) {
                 </div>
 
                 <div className="mt-4">
-                    <Label forInput="address" value="Address" />
+                    <Label forInput="address" value={lang.get('strings.Address')}/>
 
                     <Input
                         type="text"
@@ -183,7 +183,7 @@ export default function Register(props) {
 
                 <div className="mt-4 flex gap-x-4">
                     <div className="w-1/3">
-                        <Label forInput="staffNumber" value="Staff Number" />
+                        <Label forInput="staffNumber" value={lang.get('strings.Staff-Number')} />
 
                         <Input
                             type="number"
@@ -196,7 +196,7 @@ export default function Register(props) {
                         />
                     </div>
                     <div className="w-1/3">
-                        <Label forInput="seatNumber" value="Seat Number" />
+                        <Label forInput="seatNumber" value={lang.get('strings.Seat-Number')} />
 
                         <Input
                             type="number"
@@ -211,7 +211,7 @@ export default function Register(props) {
                 </div>
 
                 <div className="mt-4">
-                    <Label className="mb-3" forInput="registrationPackage" value="Registration Package" />
+                    <Label className="mb-3" forInput="registrationPackage" value={lang.get('strings.Registration-Package')} />
 
                     <Select
                         placeholder="Select a package"

@@ -90,7 +90,7 @@
     "Register": "Đăng ký",
     "Register-Description": "Trước khi quản lý hiệu quả tiệm của bạn, bạn phải đăng ký tiệm của mình trong hệ thống của chúng tôi và chúng tôi sẽ cung cấp tất cả những gì bạn cần để mọi việc trở nên dễ dàng !!",
     "Registrations": "Danh sách đăng ký",
-    "Remember Me": "Ghi Nhớ",
+    "Remember Me": "Ghi Nhớ Tài Khoản",
     "Reset Password": "Đặt Lại Mật Khẩu",
     "Reset Password Notification": "Thông Báo Đặt Lại Mật Khẩu",
     "results": "kết quả",
@@ -164,6 +164,7 @@
     "Owner-Email": "Email chủ sở hữu",
     "Registration-Package": "Gói đăng kí",
     "Staff-Number": "Số nhân viên",
+    "Seat-Number": "Số ghế",
     "Customer-Number": "Số khách hàng",
     "Action": "Hành động",
     "Serial": "Số thứ tự",
@@ -248,5 +249,11 @@
     "Payment-Successful": "Thanh toán thành công",
     "Order-Payment-Successful": "Thanh toán đơn hàng thành công. Giao dịch đã được lưu trữ.",
     "Yes" : "Có",
-    "No" : "Không"
+    "No" : "Không",
+    "Confirm-Password-Description": "Đây là khu vực an toàn của ứng dụng. Vui lòng xác nhận mật khẩu của bạn trước khi tiếp tục.",
+    "Forgot-Password-Description": "Quên mật khẩu? Không sao. Hãy nhập địa chỉ email của bạn và chúng tôi sẽ gửi cho bạn liên kết đặt lại mật khẩu qua email.",
+    "Email-Verification": "Xác thực Email",
+    "Verify-Email-Description": "Cảm ơn bạn đã đăng ký! Trước khi bắt đầu, bạn có thể xác minh địa chỉ email của mình bằng cách nhấp vào liên kết chúng tôi vừa gửi qua email cho bạn không? Nếu bạn không nhận được email, chúng tôi sẽ sẵn lòng gửi cho bạn một email khác.",
+    "Resend-Verification-Email": "Gửi lại email xác minh",
+    "Sent-Verification-Email-Description": "Một liên kết xác minh mới đã được gửi đến địa chỉ email bạn đã cung cấp trong quá trình đăng ký."
 }
