@@ -149,9 +149,9 @@ export default function Index(props) {
                 </div>
                 <div className="max-w-full mx-auto sm:px-6 lg:px-8">
                     <Descriptions title={lang.get('strings.Order-Information')} layout="vertical" bordered>
-                        <Descriptions.Item label={lang.get('strings.Customer-Name')}>{order.customer.name}</Descriptions.Item>
-                        <Descriptions.Item label={lang.get('strings.Customer-Phone')}>{order.customer.phone}</Descriptions.Item>
-                        <Descriptions.Item label={lang.get('strings.Active-Account-Customer')}>{order.customer.is_active}</Descriptions.Item>
+                        <Descriptions.Item label={lang.get('strings.Customer-Name')}>{order.customer === null ? '' : order.customer.name}</Descriptions.Item>
+                        <Descriptions.Item label={lang.get('strings.Customer-Phone')}>{order.customer === null ? '' : order.customer.phone}</Descriptions.Item>
+                        <Descriptions.Item label={lang.get('strings.Active-Account-Customer')}>{order.customer === null ? '' : order.customer.is_active}</Descriptions.Item>
                         <Descriptions.Item label={lang.get('strings.Time-Order')}>{order.created_time_order}</Descriptions.Item>
                         <Descriptions.Item label={lang.get('strings.Order-Status')} span={2}>
                             <Badge status="default" text={order.status} />

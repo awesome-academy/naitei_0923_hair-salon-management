@@ -37,13 +37,6 @@ class BillController extends Controller
     private function calculateBill(Order $order)
     {
         $order->load(['customer', 'products', 'bill']);
-
-        if ($order->customer->is_active) {
-            $order->customer->is_active = 'YES';
-        } else {
-            $order->customer->is_active = 'NO';
-        }
-
         $order->created_time_order = Carbon::create($order->created_at)->format('d/m/y H:i');
         $order->status = config('app.order_status')[$order->status];
 

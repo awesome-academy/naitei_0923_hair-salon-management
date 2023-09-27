@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
 import CustomTable from '@/Components/CustomeTable';
-import { Table, Modal, Select, Tag, notification } from 'antd';
+import { Input, Modal, Select, Tag, notification } from 'antd';
 import { useLang } from '../../Context/LangContext';
 import { DeleteOutlined, FileDoneOutlined, ExclamationCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { Inertia } from "@inertiajs/inertia";
+import 'antd/dist/antd.css';
 
 export default function Index(props) {
 
@@ -18,7 +19,7 @@ export default function Index(props) {
     useEffect(() => {
         setOrders(props[0].orders.filter(item => (
             item.serial.toString().includes(searchValue.toString()) ||
-            item.customer.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+            item.customer === null ? true : item.customer.name.toLowerCase().includes(searchValue.toLowerCase()) ||
             item.products.some((product) =>
                 product.name.toLowerCase().includes(searchValue.toLowerCase())
             )

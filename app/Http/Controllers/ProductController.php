@@ -171,7 +171,7 @@ class ProductController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->withErrors(
                 [
-                    'update' => $e.getMessage(),
+                    'update' => $e->getMessage(),
                 ]
             );
         }

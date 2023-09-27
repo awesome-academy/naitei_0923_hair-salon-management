@@ -163,7 +163,7 @@ class SalonController extends Controller
             'address' => 'string|required|max:255',
             'id' => 'numeric|required|exists:salons,id',
             'name' => 'string|required|max:255',
-            'owner_email' => 'email|required|unique:users,email|max:255',
+            'owner_email' => 'email|required|max:255',
             'package_id' => 'numeric|required|exists:packages,id',
         ]);
 
