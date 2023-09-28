@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Dropdown from '@/Components/Dropdown';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Select, Button } from 'antd';
+import { Select, Button, Badge } from 'antd';
 import { LangProvider, useLang } from '../Context/LangContext';
 import {
     ShopOutlined,
@@ -12,7 +12,8 @@ import {
     CalendarOutlined,
     UserOutlined,
     ExperimentOutlined,
-    AppstoreOutlined
+    AppstoreOutlined,
+    NotificationOutlined
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { router } from '@inertiajs/react';
@@ -20,7 +21,7 @@ import { Inertia } from "@inertiajs/inertia";
 
 const { Header, Content, Sider } = Layout;
 
-export default function Authenticated({ auth, children }) {
+export default function Authenticated({ auth, children, ...props }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const { lang, changeLocale } = useLang();
     const [selectedLocale, setSelectedLocale] = useState(lang.getLocale());
@@ -69,7 +70,11 @@ export default function Authenticated({ auth, children }) {
             key: 'categories.index',
             icon: <AppstoreOutlined />,
             label: lang.get('strings.Categories')
-        }
+        }, {
+            key: 'notifications.index',
+            icon:  <Badge count={props.notificationNumber}><NotificationOutlined /></Badge>,
+            label: lang.get('strings.Notification')
+        } 
     ];
 
     const staffNavbarItems = [
@@ -81,7 +86,11 @@ export default function Authenticated({ auth, children }) {
             key: 'orders.index',
             icon: <CalendarOutlined />,
             label: lang.get('strings.Order')
-        }
+        }, {
+            key: 'notifications.index',
+            icon:  <Badge count={props.notificationNumber}><NotificationOutlined /></Badge>,
+            label: lang.get('strings.Notification')
+        } 
     ]
 
     const navbarItem = systemRole === 'super admin' ? superAdminNavbarIems : (auth.user.salon_role === 'manager' ? salonManagerNavbarItem : staffNavbarItems);

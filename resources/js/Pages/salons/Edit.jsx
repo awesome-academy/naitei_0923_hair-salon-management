@@ -51,6 +51,7 @@ export default function DetailSalon (props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
+            notificationNumber={props.unreadNotificationsCount}
         >
             <Head title="Edit Salon" />
             <div className="py-12">

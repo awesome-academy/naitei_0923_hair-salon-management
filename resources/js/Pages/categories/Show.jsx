@@ -201,6 +201,7 @@ export default function DetailCategory (props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
+            notificationNumber={props.unreadNotificationsCount}
         >
             <Head title="Salon Detail" />
             <Modal

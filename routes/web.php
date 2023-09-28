@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\SelectWorkingSalonController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
@@ -90,6 +91,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('select-working-salon', [SelectWorkingSalonController::class, 'select'])->name('selectSalon.select');
     Route::get('/bills/order/{order}', [BillController::class, 'show'])->name('bills.show');
     Route::post('/bills/order/{order}', [BillController::class, 'store'])->name('bills.store');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 });
 
 

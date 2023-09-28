@@ -177,6 +177,7 @@ export default function Registrations(props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
+            notificationNumber={props.unreadNotificationsCount}
         >
             <Head title="Registrations" />
             <div className="py-12">

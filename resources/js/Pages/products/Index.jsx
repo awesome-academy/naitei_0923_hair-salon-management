@@ -152,6 +152,7 @@ export default function Products(props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
+            notificationNumber={props.unreadNotificationsCount}
         >
             <Head title="Dashboard" />
             <Modal
