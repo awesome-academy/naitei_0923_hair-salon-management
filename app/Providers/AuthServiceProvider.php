@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
             return (new MailMessage)
                 ->subject(__('Verify Email Address'))
-                ->greeting(__('Hello') . ' ' . $notifiable->full_name . '!')
+                ->greeting(__('Hello :full_name !', ['full_name' => $notifiable->full_name]))
                 ->line(__('Please click the button below to verify your email address.'))
                 ->action(__('Verify Email Address'), $url)
                 ->line(__('If you did not create an account, no further action is required.'));

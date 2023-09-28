@@ -43,7 +43,7 @@
     "Fullname": "Fullname",
     "Go Home": "Go Home",
     "Go to page :page": "Go to page :page",
-    "Hello": "Hello",
+    "Hello :full_name !": "Hello :full_name !",
     "If you did not create an account, no further action is required.": "If you did not create an account, no further action is required.",
     "If you did not receive the email": "If you did not receive the email",
     "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
