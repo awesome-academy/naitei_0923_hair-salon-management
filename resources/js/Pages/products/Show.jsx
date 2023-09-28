@@ -20,6 +20,7 @@ export default function Show(props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
+            notificationNumber={props.unreadNotificationsCount}
         >
             <Head title="Staff" />
 

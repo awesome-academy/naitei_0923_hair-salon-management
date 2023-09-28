@@ -141,7 +141,7 @@ export default function Categories(props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{lang.get('strings.dashboard')}</h2>}
+            notificationNumber={props.unreadNotificationsCount}
         >
             <Head title="Dashboard" />
             <Modal

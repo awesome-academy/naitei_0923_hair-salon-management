@@ -200,6 +200,7 @@ export default function Salons(props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
+            notificationNumber={props.unreadNotificationsCount}
         >
             <Head title="Salons" />
             <div className="py-12">

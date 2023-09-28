@@ -70,6 +70,7 @@ export default function DetailSalon(props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
+            notificationNumber={props.unreadNotificationsCount}
         >
             <Head title="Salon Detail" />
             <div className="py-12">

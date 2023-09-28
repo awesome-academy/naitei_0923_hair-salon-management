@@ -46,6 +46,7 @@ export default function Index(props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
+            notificationNumber={props.unreadNotificationsCount}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{lang.get('strings.Customer-Information')}</h2>}
         >
             <Head title={lang.get('strings.Customer-Information')} />

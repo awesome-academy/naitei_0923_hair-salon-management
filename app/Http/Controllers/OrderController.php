@@ -6,6 +6,8 @@ use App\Models\Order;
 use App\Models\Salon;
 use App\Models\User;
 use App\Models\Customer;
+use App\Models\SalonRole;
+use App\Notifications\OrderNotification;
 use App\Http\Requests\StoreOrderRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -147,6 +149,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
+        $textStatus = $request->status;
         $request->status = collect(config('app.order_status'))->search($request->status);
 
         $cancelId = collect(config('app.order_status'))->search('Cancel');
@@ -167,6 +170,27 @@ class OrderController extends Controller
                 },
                 config('database.connections.mysql.max_attempts')
             );
+            $salonManagers = DB::table('salon_user')
+                ->where('salon_id', session('selectedSalon'))
+                ->where('salon_role_id', SalonRole::where('name', 'manager')->get()->first()->id)
+                ->get();
+
+            $changingPerson = auth()->user()->first_name." ".auth()->user()->last_name;
+
+            $title = __("Order-Status-Updated", ['Id' => $order->id]);
+            $message = __(
+                'Change-Order-Status',
+                [
+                    'ChangingPerson' => $changingPerson,
+                    'Id' => $order->id,
+                    'NewStatus' => $textStatus,
+                ]
+            );
+
+            foreach ($salonManagers as $salonManager) {
+                $salonManagerInstance = User::find($salonManager->user_id);
+                $salonManagerInstance->notify(new OrderNotification($order, auth()->user(), $title, $message));
+            }
         } catch (Exception $e) {
             return redirect()->back()->withErrors(
                 [

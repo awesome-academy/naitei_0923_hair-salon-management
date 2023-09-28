@@ -41,6 +41,8 @@ class HandleInertiaRequests extends Middleware
             'ziggy' => function () {
                 return (new Ziggy)->toArray();
             },
+            'unreadNotificationsCount'=> $request->user() == null ? 0 :
+                $request->user()->unreadNotifications()->count(),
         ]);
     }
 }
