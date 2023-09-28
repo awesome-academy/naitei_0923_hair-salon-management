@@ -16,6 +16,7 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { router } from '@inertiajs/react';
+import { Inertia } from "@inertiajs/inertia";
 
 const { Header, Content, Sider } = Layout;
 
@@ -68,7 +69,7 @@ export default function Authenticated({ auth, children }) {
             key: 'categories.index',
             icon: <AppstoreOutlined />,
             label: lang.get('strings.Categories')
-        } 
+        }
     ];
 
     const staffNavbarItems = [
@@ -91,6 +92,8 @@ export default function Authenticated({ auth, children }) {
 
         setSelectedLocale(value);
         changeLocale(value);
+
+        Inertia.get(route('locale', { lang: value } ));
     };
 
     return (

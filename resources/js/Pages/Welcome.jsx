@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, Head } from '@inertiajs/inertia-react';
 import { LangProvider, useLang } from '../Context/LangContext';
 import { Select } from 'antd';
+import { Inertia } from "@inertiajs/inertia";
 
 export default function Welcome(props) {
     const { lang, changeLocale } = useLang();
@@ -13,6 +14,8 @@ export default function Welcome(props) {
 
         setSelectedLocale(value);
         changeLocale(value);
+
+        Inertia.get(route('locale', { lang: value } ));
     };
     return (
         <>

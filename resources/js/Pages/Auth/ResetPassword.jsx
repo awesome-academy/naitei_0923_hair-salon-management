@@ -5,6 +5,7 @@ import Input from '@/Components/Input';
 import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, useForm } from '@inertiajs/inertia-react';
+import { useLang } from "@/Context/LangContext";
 
 export default function ResetPassword({ token, email }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -13,6 +14,7 @@ export default function ResetPassword({ token, email }) {
         password: '',
         password_confirmation: '',
     });
+    const { lang } = useLang();
 
     useEffect(() => {
         return () => {
@@ -32,7 +34,7 @@ export default function ResetPassword({ token, email }) {
 
     return (
         <Guest>
-            <Head title="Reset Password" />
+            <Head title={lang.get('strings.Reset Password')} />
 
             <ValidationErrors errors={errors} />
 
@@ -51,7 +53,7 @@ export default function ResetPassword({ token, email }) {
                 </div>
 
                 <div className="mt-4">
-                    <Label forInput="password" value="Password" />
+                    <Label forInput="password" value={lang.get('strings.Password')} />
 
                     <Input
                         type="password"
@@ -65,7 +67,7 @@ export default function ResetPassword({ token, email }) {
                 </div>
 
                 <div className="mt-4">
-                    <Label forInput="password_confirmation" value="Confirm Password" />
+                    <Label forInput="password_confirmation" value={lang.get('strings.Confirm-Password')} />
 
                     <Input
                         type="password"
@@ -79,7 +81,7 @@ export default function ResetPassword({ token, email }) {
 
                 <div className="flex items-center justify-end mt-4">
                     <Button className="ml-4" processing={processing}>
-                        Reset Password
+                        {lang.get('strings.Reset Password')}
                     </Button>
                 </div>
             </form>
