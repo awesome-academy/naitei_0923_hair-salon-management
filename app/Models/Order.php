@@ -17,7 +17,7 @@ class Order extends Model
 
     public function bill(): HasOne
     {
-        return $this->hasOne(Bill::class);
+        return $this->hasOne(Bill::class, 'order_id', 'id');
     }
 
     public function customer(): BelongsTo

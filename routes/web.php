@@ -18,6 +18,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\LanguageController;
+use App\Models\Category;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,17 +71,15 @@ Route::middleware(['superAdmin'])->group(
     }
 );
 
-Route::get(
-    '/dashboard',
-    [DashboardController::class, 'index']
-)->middleware(['auth', 'verified', 'salonManager'])->name('dashboard');
 
 Route::middleware(['auth', 'verified', 'salonManager'])->group(function () {
     Route::resource('/customers', CustomerController::class);
     Route::resource('/products', ProductController::class);
     Route::resource('/categories', CategoryController::class);
     Route::resource('staffs', StaffController::class);
-
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/{startDate}/{endDate}', [DashboardController::class, 'getDataWithDates'])
+        ->name('dashboard.getData');
 
     Route::put('/products/{product}/inactive', [ProductController::class, 'inactive'])->name('products.inactive');
 });

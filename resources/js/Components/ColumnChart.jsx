@@ -1,35 +1,32 @@
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { DualAxes } from '@ant-design/plots';
-import React from 'react';
-import { useLang } from '../Context/LangContext';
 
-const LineChart = (props) => {
-    const { lang } = useLang();
+const ColumnChart = (props) => {
     const {data, nameChart, xField, yField} = props;
+    
     const config = {
         data: [data, data],
+        isGroup: true,
         padding: 'auto',
-        height: 350,
+        height: 400,
         autoFit: false,
         xField: xField,
         yField: yField,
-        point: {
-            size: 5,
-            shape: 'diamond',
-        },
         geometryOptions: [
             {
-                geometry: 'line',
-                color: '#5B8FF9',
+                geometry: 'column',
             },
             {
                 geometry: 'line',
-                color: '#5AD8A6',
+                lineStyle: {
+                    lineWidth: 2,
+                },
             },
         ],
     };
 
     let chart;
-
     return (
         <div className="px-2.5 py-2.5 overflow-x-scroll">
             <div className="flex gap-4">
@@ -38,6 +35,7 @@ const LineChart = (props) => {
             <DualAxes {...config} onReady={(chartInstance) => (chart = chartInstance)} />
         </div>
     );
-}
+  
+};
 
-export default LineChart;
+export default ColumnChart;

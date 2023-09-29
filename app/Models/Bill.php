@@ -4,15 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Bill extends Model
 {
     use HasFactory;
 
-    public function order(): HasOne
+    public function order(): BelongsTo
     {
-        return $this->hasOne(Order::class);
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 }

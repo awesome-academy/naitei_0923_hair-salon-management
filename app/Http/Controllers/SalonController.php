@@ -213,7 +213,8 @@ class SalonController extends Controller
                         }
                         $salon->delete();
                     }
-                }
+                },
+                config('database.connections.mysql.max_attempts')
             );
         } catch (Exception $e) {
             return redirect()->back()->withErrors(
