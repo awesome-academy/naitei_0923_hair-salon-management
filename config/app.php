@@ -239,6 +239,13 @@ return [
         3 => 'Cancel'
     ],
 
+    'order_product_status' => [
+        0 => 'Prepare',
+        1 => 'In Process',
+        2 => 'Done',
+        3 => 'Cancel'
+    ],
+
     'registration_status' => [
         1 => 'Waiting',
         2 => 'Accepted',
@@ -246,6 +253,11 @@ return [
     ],
 
     'user_active' => [
+        0 => 'False',
+        1 => 'True',
+    ],
+
+    'user_free_status' => [
         0 => 'False',
         1 => 'True',
     ],

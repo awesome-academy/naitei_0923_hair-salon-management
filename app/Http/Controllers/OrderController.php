@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Salon;
 use App\Models\User;
+use App\Models\Product;
 use App\Models\Customer;
 use App\Models\SalonRole;
 use App\Notifications\OrderNotification;
+use App\Notifications\OrderProductNotification;
 use App\Http\Requests\StoreOrderRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -121,14 +123,23 @@ class OrderController extends Controller
             abort(403);
         }
 
+        $salonManagerRoleId = SalonRole::where('name', 'manager')->first()->id;
+        $freeStaffs = DB::table('users')->join('salon_user', 'users.id', '=', 'salon_user.user_id')
+            ->where('salon_user.salon_id', session('selectedSalon'))
+            ->where('salon_user.salon_role_id', '<>', $salonManagerRoleId)
+            ->where('salon_user.status', collect(config('app.user_free_status'))->search('True'))
+            ->get();
+
         return Inertia::render(
             'orders/Show.jsx',
             [
-                ['order' => $this->detailOrderPage($order)],
+                [
+                    'order' => $this->detailOrderPage($order),
+                    'freeStaffs' => $freeStaffs,
+                ],
             ]
         );
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -246,6 +257,12 @@ class OrderController extends Controller
             ->count();
 
         $order->load(['customer', 'products']);
+
+        foreach ($order->products as $product) {
+            $pivotId = $product->pivot->id;
+            $product->order_product_id = $pivotId;
+        }
+
         $order->time_order = $creation_time->format('d/m/y H:i');
         $order->status = config('app.order_status')[$order->status];
         $order->serial = $serial;
@@ -256,13 +273,125 @@ class OrderController extends Controller
             $product->creation_time = Carbon::create($product->pivot->created_at)->format('d/m/y H:i');
 
             if (isset($product->pivot->staff_id)) {
-                $staff = User::where('id', '=', $product->pivot->staff_id)->get('last_name');
-                $product->staff_name = $staff[0]->last_name;
+                $staff = User::where('id', $product->pivot->staff_id)->get();
+                $product->staff_name = $staff[0]->last_name . " " . $staff[0]->first_name;
+                $product->staff_id = $product->pivot->staff_id;
             } else {
                 $product->staff_name = "";
+                $product->staff_id = null;
             }
         }
 
         return $order;
+    }
+
+    public function selectStaff(Request $request, $id)
+    {
+        $validated = $request->validate(
+            [
+                'staff' => 'numeric|required|exists:users,id',
+                'prevStaff' => 'numeric|required',
+            ]
+        );
+        try {
+            DB::transaction(
+                function () use ($validated, $id) {
+                    DB::table('order_product')->where('id', $id)->update(
+                        [
+                            'staff_id' =>  $validated['staff'],
+                        ]
+                    );
+
+                    DB::table('salon_user')->where('user_id', $validated['staff'])->update(
+                        [
+                        'status' => collect(config('app.user_free_status'))->search('False'),
+                        ]
+                    );
+
+                    if ($validated['prevStaff'] > 0) {
+                        DB::table('salon_user')->where('user_id', $validated['prevStaff'])->update(
+                            [
+                            'status' => collect(config('app.user_free_status'))->search('True'),
+                            ]
+                        );
+                    }
+
+                    $productId = DB::table('order_product')->find($id)->product_id;
+                    $productName = Product::find($productId)->name;
+
+                    $orderId = DB::table('order_product')->find($id)->order_id;
+
+                    $title = __('Assigned-New-Order-Product');
+                    $message = __(
+                        'Order-Product-Assigned',
+                        [
+                            'ProductName' => $productName,
+                            'OrderId' => $orderId,
+                        ]
+                    );
+
+                    User::find($validated['staff'])->notify(new OrderProductNotification($title, $message));
+                },
+                config('database.connections.mysql.max_attempts')
+            );
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(
+                [
+                    'selectStaff' => $e->getMessage(),
+                ]
+            );
+        }
+
+        return redirect()->back();
+    }
+
+    public function updateProduct(Request $request, $id)
+    {
+        $textStatus = $request->status;
+        $request->status = collect(config('app.order_product_status'))->search($request->status);
+
+        try {
+            DB::transaction(
+                function () use ($request, $id, $textStatus) {
+                    DB::table('order_product')->where('id', $id)
+                        ->update(['status' => $request->status]);
+
+                    if ($textStatus === 'Cancel') {
+                        $orderProduct = DB::table('order_product')->where('id', $id)->first();
+                        $staffId = $orderProduct->staff_id;
+                        $orderId = $orderProduct->order_id;
+                        $productId = $orderProduct->product_id;
+                        $productName = Product::find($productId)->name;
+
+                        if ($staffId) {
+                            DB::table('salon_user')->where('user_id', $staffId)->update(
+                                [
+                                    'status' => collect(config('app.user_free_status'))->search('True'),
+                                ]
+                            );
+                            $title = __('Product-Canceled');
+                            $message = __('Canceled-Product', ['ProductName' => $productName, 'OrderId' => $orderId]);
+
+                            DB::table('order_product')->where('id', $id)->update(
+                                [
+                                    'staff_id' => null,
+                                ]
+                            );
+
+                            User::find($staffId)->notify(new OrderProductNotification($title, $message));
+                        }
+                    }
+                },
+                config('database.connections.mysql.max_attempts')
+            );
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(
+                [
+                    'update' => $e->getMessage(),
+                ]
+            );
+        }
+
+        return redirect()->back();
     }
 }

@@ -86,6 +86,10 @@ Route::middleware(['auth', 'verified', 'salonManager'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/orders', OrderController::class);
+    Route::put('/order-products-select-staff/{id}', [OrderController::class, 'selectStaff'])
+        ->name('orders.selectStaff');
+    Route::put('/order-products-change-status/{id}', [OrderController::class, 'updateProduct'])
+        ->name('orders.updateProduct');
     Route::resource('/customers', CustomerController::class);
     Route::get('select-working-salon/{id}', [SelectWorkingSalonController::class, 'index'])->name('selectSalon.show');
     Route::post('select-working-salon', [SelectWorkingSalonController::class, 'select'])->name('selectSalon.select');

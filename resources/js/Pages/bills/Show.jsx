@@ -32,7 +32,7 @@ export default function Index(props) {
 
     const openFormPayOrder = () => {
         const unFinishProducts =  order.products.some((product) => {
-            return product.status !== 'Done';
+            return product.status !== 'Done' && product.status !== 'Cancel' ;
         });
 
         if (unFinishProducts) {
