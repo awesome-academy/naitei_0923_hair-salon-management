@@ -7,6 +7,7 @@ import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import { useLang } from "@/Context/LangContext";
+import { Image } from "antd";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -91,6 +92,12 @@ export default function Login({ status, canResetPassword }) {
                     </Button>
                 </div>
             </form>
+            <div className="flex items-center justify-end mt-4">
+                <a href={route('oauth.redirect', { provider: 'google' })}>
+                    <Image src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png"
+                        alt={lang.get('strings.Login-With-Google')} preview={false} />
+                </a>
+            </div>
         </Guest>
     );
 }

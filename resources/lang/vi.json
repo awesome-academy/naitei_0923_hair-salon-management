@@ -267,5 +267,6 @@
     "Email-Verification": "Xác thực Email",
     "Verify-Email-Description": "Cảm ơn bạn đã đăng ký! Trước khi bắt đầu, bạn có thể xác minh địa chỉ email của mình bằng cách nhấp vào liên kết chúng tôi vừa gửi qua email cho bạn không? Nếu bạn không nhận được email, chúng tôi sẽ sẵn lòng gửi cho bạn một email khác.",
     "Resend-Verification-Email": "Gửi lại email xác minh",
-    "Sent-Verification-Email-Description": "Một liên kết xác minh mới đã được gửi đến địa chỉ email bạn đã cung cấp trong quá trình đăng ký."
+    "Sent-Verification-Email-Description": "Một liên kết xác minh mới đã được gửi đến địa chỉ email bạn đã cung cấp trong quá trình đăng ký.",
+    "Sign-In-With-Google": "Đăng nhập với Google"
 }
