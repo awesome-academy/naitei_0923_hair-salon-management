@@ -49,6 +49,7 @@ export default function ResetPassword({ token, email }) {
                         className="mt-1 block w-full"
                         autoComplete="username"
                         handleChange={onHandleChange}
+                        disabled
                     />
                 </div>
 

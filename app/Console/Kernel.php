@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('removeOrder:cron')->monthly();
+        $schedule->command('auth:clear-resets')->everyFifteenMinutes();
     }
 
     /**

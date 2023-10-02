@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
@@ -27,7 +28,7 @@ class PasswordResetTest extends TestCase
 
         $this->post('/forgot-password', ['email' => $user->email]);
 
-        Notification::assertSentTo($user, ResetPassword::class);
+        Notification::assertSentTo($user, ResetPasswordNotification::class);
     }
 
     public function testResetPasswordScreenCanBeRendered()
@@ -40,7 +41,7 @@ class PasswordResetTest extends TestCase
 
         Notification::assertSentTo(
             $user,
-            ResetPassword::class,
+            ResetPasswordNotification::class,
             function ($notification) {
                 $response = $this->get('/reset-password/'.$notification->token);
 
@@ -61,7 +62,7 @@ class PasswordResetTest extends TestCase
 
         Notification::assertSentTo(
             $user,
-            ResetPassword::class,
+            ResetPasswordNotification::class,
             function ($notification) use ($user) {
                 $response = $this->post(
                     '/reset-password',
