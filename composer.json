@@ -21,7 +21,8 @@
         "laravel/tinker": "^2.0",
         "laravel/vonage-notification-channel": "^2.5",
         "mariuzzo/laravel-js-localization": "^1.10",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+        "twilio/sdk": "^7.11"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

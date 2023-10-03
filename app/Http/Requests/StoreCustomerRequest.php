@@ -26,7 +26,8 @@ class StoreCustomerRequest extends FormRequest
     {
         return [
             'name' => 'string|required|min:3|max:255',
-            'phone' => 'string|required|unique:customers,phone|min:3|max:30',
+            'phoneNumber' => 'string|required|unique:customers,phone|min:3|max:30',
+            'OTP' => 'string|required',
         ];
     }
 }

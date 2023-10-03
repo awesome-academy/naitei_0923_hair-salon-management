@@ -11,10 +11,13 @@ import 'antd/dist/antd.css';
 export default function Staffs(props) {
 
     const [customers, setCustomers] = useState(props[0].customers);
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [name, setName] = useState('');
+    const [isActive, setIsActive] = useState(false);
     const { lang } = useLang();
     const { confirm } = Modal;
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { post } = useForm();
+    const [otpModalOpen, setOtpModalOpen] = useState(false);
     const [form] = Form.useForm();
     const [modalTitle, setModalTitle] = useState('');
     const [editMode, setEditMode] = useState(false);
@@ -44,22 +47,8 @@ export default function Staffs(props) {
         setIsModalOpen(true);
     };
 
-    const handleOk = (values) => {
-        Inertia.post(route('customers.store'), {...values}, {
-            onSuccess: () => {
-                openNotification('success',
-                    lang.get('strings.Successfully-Created'),
-                    lang.get('strings.Successfully-Created-Customer')
-                );
-            },
-        });
-
-        setIsModalOpen(false);
-        setEditMode(false);
-    };
-
     const handleEditOk = (values) => {
-        Inertia.put(route('customers.update', { customer: values.id }), {...values}, {
+        Inertia.put(route('customers.update', { customer: values.id }), { ...values }, {
             onSuccess: () => {
                 openNotification('success',
                     lang.get('strings.Successfully-Edited'),
@@ -76,7 +65,14 @@ export default function Staffs(props) {
         if (editMode) {
             handleEditOk(values);
         } else {
-            handleOk(values);
+            setPhoneNumber(values.phone);
+            setName(values.name);
+            setIsActive(values.is_active);
+            Inertia.post(route('customers.sendOTP'), { phoneNumber: values.phone }, {
+                onError: () => { },
+                onSuccess: () => { },
+            });
+            setOtpModalOpen(true);
         }
     }
 
@@ -192,10 +188,10 @@ export default function Staffs(props) {
                         <EditOutlined style={{ fontSize: 19 }} onClick={
                             () => {
                                 showModalEditCustomer(record);
-                            }}/>
+                            }} />
                         <EyeOutlined style={{ fontSize: 19 }} onClick={
                             () => {
-                                Inertia.get(route('customers.show', { customer : record.id }));
+                                Inertia.get(route('customers.show', { customer: record.id }));
                             }} />
                         <DeleteOutlined style={{ fontSize: 19 }} onClick={() => {
                             showDeleteConfirm(record)
@@ -208,6 +204,24 @@ export default function Staffs(props) {
 
     const onTableChange = (pagination, filters, sorter, extra) => { };
 
+    const checkOTP = (values) => {
+        Inertia.post(route('customers.checkOTP'), { OTP: values.OTP, phoneNumber, name, isActive: isActive }, {
+            onSuccess: (response) => {
+                openNotification('success',
+                    lang.get('strings.Successfully-Created'),
+                    lang.get('strings.Successfully-Created-Customer')
+                );
+            },
+            onError: (error) => {
+            }
+        })
+        setOtpModalOpen(false);
+        setIsModalOpen(false);
+    }
+
+    const otpModalClose = () => {
+        setOtpModalOpen(false);
+    }
     return (
         <Authenticated
             auth={props.auth}
@@ -226,10 +240,48 @@ export default function Staffs(props) {
                         {lang.get('strings.Create-Customer')}
                     </Button>
                     <Search placeholder="input name or phone" onChange={searchChangeHandler}
-                        enterButton bordered size="large" allowClear style={{ width: 304 }}/>
+                        enterButton bordered size="large" allowClear style={{ width: 304 }} />
                 </div>
                 <div className="flex justify-end px-8">
-                    <Modal title={modalTitle} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
+                    <Modal title="OTP" open={otpModalOpen} onCancel={otpModalClose} footer={null}>
+                        <Form
+                            name="basic"
+                            labelCol={{
+                                span: 8,
+                            }}
+                            wrapperCol={{
+                                span: 16,
+                            }}
+                            style={{
+                                maxWidth: 600,
+                            }}
+                            onFinish={checkOTP}
+                        >
+                            <Form.Item
+                                label="sent OTP"
+                                name="OTP"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input sent otp!',
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                wrapperCol={{
+                                    offset: 8,
+                                    span: 16,
+                                }}
+                            >
+                                <Button type="primary" htmlType="submit">
+                                    {lang.get('strings.Submit')}
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                    </Modal>
+                    <Modal title={modalTitle} open={isModalOpen} onCancel={handleCancel} footer={null}>
                         <Form {...layout} form={form} name="control-hooks" onFinish={handleSubmitModal}>
                             <Form.Item name="id" className="hidden">
                                 <Input hidden={true} />
@@ -256,7 +308,7 @@ export default function Staffs(props) {
                             >
                                 <Input />
                             </Form.Item>
-                            <Form.Item name="is_active" valuePropName="checked"  wrapperCol={{ offset: 8, span: 16 }}>
+                            <Form.Item name="is_active" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
                                 <Checkbox> {lang.get('strings.Active-Account-Customer')} </Checkbox>
                             </Form.Item>
 

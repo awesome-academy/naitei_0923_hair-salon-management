@@ -17,6 +17,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BillController;
+use App\Http\Controllers\TwilioSMSController;
 use App\Http\Controllers\LanguageController;
 use App\Models\Category;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -73,6 +74,8 @@ Route::middleware(['superAdmin'])->group(
 
 
 Route::middleware(['auth', 'verified', 'salonManager'])->group(function () {
+    Route::post('/customers/sendOTP', [CustomerController::class, 'sendOTP'])->name('customers.sendOTP');
+    Route::post('/customers/checkOTP', [CustomerController::class, 'checkOTP'])->name('customers.checkOTP');
     Route::resource('/customers', CustomerController::class);
     Route::resource('/products', ProductController::class);
     Route::resource('/categories', CategoryController::class);
@@ -107,5 +110,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('language/{lang}', [LanguageController::class, 'changeLanguage'])->name('locale');
+
+Route::get('sendSMS', [TwilioSMSController::class, 'index']);
 
 require __DIR__.'/auth.php';

@@ -9,9 +9,53 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Twilio\Rest\Client;
 
 class CustomerController extends Controller
 {
+    public function sendOTP(Request $request)
+    {
+        $validated = $request->validate(
+            [
+                'phoneNumber' => 'required|string|max:30',
+            ]
+        );
+        $validated['phoneNumber'] =  "+1" . ltrim($validated['phoneNumber'], '0');
+        $sid = getenv("TWILIO_SID");
+        $token = getenv("TWILIO_TOKEN");
+        $twilio = new Client($sid, $token);
+
+        $verification = $twilio->verify->v2->services("VA1b205eb22b870ef00da6060e37e3f686")
+            ->verifications
+            ->create($validated['phoneNumber'], "sms");
+
+        return redirect()->route('customers.index');
+    }
+
+    public function checkOTP(StoreCustomerRequest $request)
+    {
+        $validated = $request->validated();
+
+        $sid = getenv("TWILIO_SID");
+        $token = getenv("TWILIO_TOKEN");
+        $twilio = new Client($sid, $token);
+
+        $validated['phoneNumber'] =  "+1" . ltrim($validated['phoneNumber'], '0');
+
+        $verification_check = $twilio->verify->v2->services("VA1b205eb22b870ef00da6060e37e3f686")
+            ->verificationChecks
+            ->create(
+                [
+                    "to" => $validated['phoneNumber'],
+                    "code" => $validated['OTP'],
+                ]
+            );
+        if ($verification_check->status == 'approved') {
+            $this->store($request);
+        }
+
+        return redirect()->route('customers.index');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,9 +63,12 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return Inertia::render('customers/Index.jsx', [
-            ['customers' => Customer::where('salon_id', session('selectedSalon'))->get()],
-        ]);
+        return Inertia::render(
+            'customers/Index.jsx',
+            [
+                ['customers' => Customer::where('salon_id', session('selectedSalon'))->get()],
+            ]
+        );
     }
 
     /**
@@ -37,33 +84,30 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCustomerRequest $request)
+    public function store($request)
     {
-        $request->validated();
-
-        if (!isset($request->is_active)) {
-            $request->is_active = false;
+        if (!isset($request->isActive)) {
+            $request->isActive = false;
         }
 
         $customer = new Customer();
 
         $customer->name = $request->name;
-        $customer->phone = $request->phone;
-        $customer->is_active = $request->is_active;
+        $customer->phone = $request->phoneNumber;
+        $customer->is_active = $request->isActive;
         $customer->salon_id = session('selectedSalon');
 
         $customer->save();
-
         return redirect()->route('customers.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Customer $customer
      * @return \Illuminate\Http\Response
      */
     public function show(Customer $customer)
@@ -72,15 +116,18 @@ class CustomerController extends Controller
             abort(403);
         }
 
-        return Inertia::render('customers/Show.jsx', [
-            ['customer' => $this->detailCustomerPage($customer)],
-        ]);
+        return Inertia::render(
+            'customers/Show.jsx',
+            [
+                ['customer' => $this->detailCustomerPage($customer)],
+            ]
+        );
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Customer $customer
      * @return \Illuminate\Http\Response
      */
     public function edit(Customer $customer)
@@ -91,19 +138,21 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Customer  $customer
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Models\Customer     $customer
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
         $request->validated();
 
-        $customer->update([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'is_active' => $request->is_active,
-        ]);
+        $customer->update(
+            [
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'is_active' => $request->is_active,
+            ]
+        );
 
         return redirect()->route('customers.index');
     }
@@ -111,7 +160,7 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Customer $customer
      * @return \Illuminate\Http\Response
      */
     public function destroy(Customer $customer)
