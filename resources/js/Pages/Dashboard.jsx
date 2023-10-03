@@ -1,12 +1,16 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head, useForm } from '@inertiajs/inertia-react';
 import { useLang } from '../Context/LangContext';
 import LineChart from '@/Components/LineChart';
+import ColumnChart from '@/Components/ColumnChart';
 import CustomModal from '@/Components/CustomModal';
-import { Button, Select, Form, Input, notification } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
+import CustomTable from '@/Components/CustomeTable';
+import { Button, Select, Form, Input, notification, DatePicker, Progress } from 'antd';
+import { EditOutlined, DollarCircleOutlined, UserOutlined} from '@ant-design/icons';
 import { Inertia } from '@inertiajs/inertia'
+import axios from "axios";
+import moment from 'moment';
 import 'antd/dist/antd.css';
 
 export default function Dashboard(props) {
@@ -22,6 +26,9 @@ export default function Dashboard(props) {
     const [customerForm] = Form.useForm();
     const [quantityForm] = Form.useForm();
     const customers = props[0].customers.map(customer => { return { label: customer.phone, value: customer.id } });
+    const { RangePicker } = DatePicker;
+    const [today, setToday] = useState(props[0].today);
+    const [firstDayInMonth, setFirstDayInMonth] = useState(props[0].firstDayInMonth);
 
     const showCreateInstantOrderModal = () => {
         setCreateInstantOrderModalOpen(true);
@@ -317,6 +324,154 @@ export default function Dashboard(props) {
         </CustomModal>
     }, [selectQuantityModalOpen, lang, customerId]);
 
+    const [dataRevenue, setDataRevenue] = useState([]);
+    const [dayPicked, setDayPicked] = useState(0);
+    const [revenueTotal, setRevenueTotal] = useState(0);
+    const [customerTotal, setCustomerTotal] = useState(0);
+    const [percentCustomerReturn, setPercentCustomerReturn] = useState(0);
+    const [dataProducts, setDataProducts] = useState([]);
+
+    useEffect(() => {
+        updateDatePicker([moment(firstDayInMonth, 'YYYY-MM-DD'), moment(today, 'YYYY-MM-DD')]);
+    }, []); 
+    
+    const updateDatePicker = (dates) => {
+        const [startDate, endDate] = dates;
+        const formattedStartDate = startDate.format('DD-MM-YYYY');
+        const formattedEndDate = endDate.format('DD-MM-YYYY');
+        axios.get(route('dashboard.getData', {startDate: formattedStartDate, endDate: formattedEndDate}))
+            .then((response) => {
+                console.log(response.data);
+                setDataRevenue(updateRevenueData(response.data, startDate, endDate));
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+    
+    const updateRevenueData = (bills, startDate, endDate) => {
+        const productsAll = [];
+        const totalByDate = [];
+        const customerAll = [];
+        const customerUnique = [];
+
+        bills.forEach(bill => {
+            const date = bill.date;
+            const total = bill.total;
+            const customer_id = bill.customer_id
+            if (totalByDate[date]) {
+                totalByDate[date] += total;
+            } else {
+                totalByDate[date] = total;
+            };
+            if (customerAll[date]) {
+                if (!customerAll[date].includes(customer_id)) {
+                    customerAll[date].push(customer_id);
+                }
+            } else {
+                customerAll[date] = [];
+                customerAll[date].push(customer_id);
+            };
+            if (!customerUnique.includes(customer_id)) {
+                customerUnique.push(customer_id);
+            };
+            bill.order.products.forEach(product => {
+                if (productsAll[product.name]) {     
+                    productsAll[product.name].quantity += product.pivot.quantity;
+                } else {
+                    productsAll[product.name] = {
+                        cost: product.cost,
+                        quantity: product.pivot.quantity,
+                        inventory: product.quantity,
+                    };
+                }
+            });
+        });
+        console.log(customerUnique);
+        const revenueByDay = [];
+        var day = 0;
+        var revenueAll = 0;
+        var customerCount = 0;
+        const currentDate = new Date(startDate.format('YYYY-MM-DD'));
+        while (currentDate <= new Date(endDate.format('YYYY-MM-DD'))) {
+            day++;
+            const formattedDate = formatDate(currentDate);
+            if (totalByDate[formattedDate]) {
+                revenueAll += totalByDate[formattedDate];
+                customerCount += customerAll[formattedDate].length;
+                revenueByDay.push(
+                    {
+                        date: formattedDate,
+                        revenue: totalByDate[formattedDate],
+                        customer: customerAll[formattedDate].length
+                    }
+                );
+            } else {
+                revenueByDay.push(
+                    {
+                        date: formattedDate,
+                        revenue: 0,
+                        customer: 0
+                    }
+                );
+            }
+            currentDate.setDate(currentDate.getDate() + 1); 
+        }
+        console.log(revenueByDay);
+        setDayPicked(day);
+        setRevenueTotal(revenueAll);
+        setCustomerTotal(customerCount);
+        setPercentCustomerReturn(parseFloat((((customerCount - customerUnique.length) / customerCount) * 100).toFixed(0)));
+
+        const productsSortQuantity = Object.entries(productsAll).sort((a, b) => b[1].quantity - a[1].quantity);
+        const productsDataChart = []
+        productsSortQuantity.forEach(product => {
+            productsDataChart.push({
+                product: product[0],
+                sales: product[1].quantity,
+                revenue: product[1].quantity * product[1].cost,
+                percentRenvenue: parseFloat((((product[1].quantity * product[1].cost) / revenueAll) * 100).toFixed(2)),
+                inventory: product[1].inventory
+            })
+        })
+        setDataProducts(productsDataChart);
+        
+        return revenueByDay;
+    }
+
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+      
+        return `${day}-${month}-${year}`;
+    }
+
+    const columns = [
+        {
+            title: lang.get('strings.Name'),
+            dataIndex: 'product',
+        },
+        {
+            title: lang.get('strings.Sales'),
+            dataIndex: 'sales',
+        },
+        {
+            title: lang.get('strings.Revenue'),
+            dataIndex: 'revenue',
+        },
+        {
+            title: lang.get('strings.%-Renvenue'),
+            dataIndex: 'percentRenvenue',
+        },
+        {
+            title: lang.get('strings.Inventory'),
+            dataIndex: 'inventory',
+        },
+    ];
+
+    const onTableChange = (pagination, filters, sorter, extra) => { };
+
     return (
         <Authenticated
             auth={props.auth}
@@ -338,9 +493,45 @@ export default function Dashboard(props) {
                     </Button>
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
+                <RangePicker onChange={(dates) => updateDatePicker(dates)} defaultValue={[moment(firstDayInMonth, 'YYYY-MM-DD'),moment(today, 'YYYY-MM-DD')]} />
+            </div>
+            <div className="grid grid-cols-2 gap-2 bg-gray-50 rounded-xl p-8 my-4">
                 <div>
-                    <LineChart />
+                    <LineChart data={dataRevenue} nameChart={'Revenue vs Customer'} xField={'date'} yField={['revenue', 'customer']}/>
+                </div>
+                <div className='grid grid-cols-2 gap-1'>
+                    <div className="flex flex-col items-center">
+                        <h1 className="mb-10 mt-8 text-2xl font-bold">{lang.get('strings.Revenue-Total')}</h1>
+                        <Progress type="circle" percent={100} format={() => dayPicked + ' '+lang.get('strings.Days')} width={200} />
+                        <h1 className="pt-10 text-4xl font-bold">
+                            <span className='text-rose-600 text-4xl'>{revenueTotal}</span>
+                            <DollarCircleOutlined style={{ color: '#E1B530' }}/>
+                        </h1>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <h1 className="mb-10 mt-8 text-2xl font-bold">{lang.get('strings.Customer-Total')}</h1>
+                        <Progress type="circle" percent={percentCustomerReturn} format={() => percentCustomerReturn + ' '+lang.get('strings.%')} width={200} />
+                        <h1 className="pt-10 text-4xl font-bold">
+                            <span className='text-rose-600 text-4xl'>{customerTotal}</span>
+                            <UserOutlined style={{ color: '#1890ff' }}/>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 bg-gray-50 rounded-xl p-8 my-4">
+                <div>
+                    <ColumnChart data={dataProducts} nameChart={'Products'} xField={'product'} yField={['sales','revenue']}/>
+                </div>
+                <div className="flex flex-col items-center">
+                    <h1 className="mb-10 mt-8 text-2xl font-bold">{lang.get('strings.Best-Sale')}</h1>
+                    <CustomTable
+                        bordered
+                        columns={columns}
+                        dataSource={dataProducts.slice(0, 6)}
+                        onChange={onTableChange}
+                        pagination={false}
+                    />
                 </div>
             </div>
         </Authenticated>

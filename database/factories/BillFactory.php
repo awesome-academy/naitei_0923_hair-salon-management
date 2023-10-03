@@ -27,7 +27,7 @@ class BillFactory extends Factory
             'total' => $this->faker->randomNumber(),
             'cash' => $this->faker->randomNumber(),
             'change' => $this->faker->randomNumber(),
-            'status' => $this->faker->numberBetween(0, 2),
+            'status' => $this->faker->numberBetween(0, 1),
             'created_at' => now(),
             'updated_at' => now(),
         ];

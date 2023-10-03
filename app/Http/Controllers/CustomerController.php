@@ -116,13 +116,16 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        DB::transaction(function () use ($customer) {
-            foreach ($customer->orders as $order) {
-                $order->products()->detach();
-            }
-            $customer->orders()->delete();
-            $customer->delete();
-        }, config('database.connections.mysql.max_attempts'));
+        DB::transaction(
+            function () use ($customer) {
+                foreach ($customer->orders as $order) {
+                    $order->products()->detach();
+                }
+                $customer->orders()->delete();
+                $customer->delete();
+            },
+            config('database.connections.mysql.max_attempts')
+        );
 
         return redirect()->route('customers.index');
     }

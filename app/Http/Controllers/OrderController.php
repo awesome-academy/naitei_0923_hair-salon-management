@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Exception;
 
 class OrderController extends Controller
 {
@@ -54,8 +55,6 @@ class OrderController extends Controller
 
         $order_status = collect(config('app.order_status'));
         $prepare_id = $order_status->search('Prepare');
-
-        $products = $request->input('products');
 
         try {
             DB::transaction(
@@ -172,12 +171,18 @@ class OrderController extends Controller
                     $order->update(
                         [
                             'status' => $request->status,
+                            'updated_at' => now(),
                         ]
                     );
 
                     DB::table('order_product')->where('order_id', $order->id)
                         ->where('status', '<>', $cancelId)
-                        ->update(['status' => $doneId]);
+                        ->update(
+                            [
+                                'status' => $doneId,
+                                'updated_at' => now(),
+                            ]
+                        );
                 },
                 config('database.connections.mysql.max_attempts')
             );
