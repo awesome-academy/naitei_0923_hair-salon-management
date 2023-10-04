@@ -79,7 +79,7 @@ class OrderController extends Controller
                             ]
                         );
                     }
-                    
+
                     $data = [];
 
                     $products = $request->input('products');
