@@ -59,6 +59,7 @@ abstract class ModelTestCase extends TestCase
         if (is_null($foreignKey)) {
             $foreignKey = $model->getForeignKey();
         }
+
         $this->assertEquals($foreignKey, $relation->getForeignKeyName());
 
         if (is_null($localKey)) {
