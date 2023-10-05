@@ -15,7 +15,7 @@ class Registration extends Model
 
     public function salon(): HasOne
     {
-        return $this->hasOne(Salon::class, 'email', 'owner_email');
+        return $this->hasOne(Salon::class, 'owner_email', 'email');
     }
     public function package(): BelongsTo
     {

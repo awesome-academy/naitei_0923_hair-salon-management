@@ -11,13 +11,15 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $fillable=['*'];
+
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'category_id', 'id');
     }
 
     public function salon(): BelongsTo
     {
-        return $this->belongsTo(Salon::class);
+        return $this->belongsTo(Salon::class, 'salon_id', 'id');
     }
 }
