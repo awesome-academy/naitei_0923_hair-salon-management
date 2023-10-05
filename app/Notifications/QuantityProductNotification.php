@@ -7,20 +7,19 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ResetPasswordNotification extends Notification implements ShouldQueue
+class QuantityProductNotification extends Notification
 {
     use Queueable;
-
-    public $token;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($token)
+    public function __construct($title, $message)
     {
-        $this->token = $token;
+        $this->title = $title;
+        $this->message = $message;
     }
 
     /**
@@ -31,7 +30,7 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -42,17 +41,10 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $url = route('password.reset', ['token' => $this->token, 'email' => $notifiable->email]);
-
         return (new MailMessage)
-            ->subject(__('Reset Password Notification'))
-            ->greeting(__('Hello :full_name !', ['full_name' => $notifiable->full_name]))
-            ->line(__('You are receiving this email because we received a password reset request for your account.'))
-            ->action(__('Reset Password'), $url)
-            ->line(__('This password reset link will expire in :count minutes.', [
-                'count' => config('auth.passwords.users.expire'),
-            ]))
-            ->line(__('If you did not request a password reset, no further action is required.'));
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our application!');
     }
 
     /**
@@ -64,7 +56,8 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            //
+            'message' => $this->message,
+            'title' => $this->title,
         ];
     }
 }

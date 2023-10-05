@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBillRequest;
 use App\Models\Bill;
 use App\Models\Order;
+use App\Models\User;
+use App\Notifications\QuantityProductNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Exception;
 
 class BillController extends Controller
 {
@@ -15,16 +20,76 @@ class BillController extends Controller
     {
         $request->validated();
 
-        $bill = new Bill();
-        $bill->order_id = $order->id;
-        $bill->payment_method = $request->payment_method;
-        $bill->total = $request->total;
-        $bill->cash = $request->cash_money;
-        $bill->change = $request->change_money;
-        $bill->status = array_search("Paid", config('app.bill_status'));
-        $bill->save();
+        foreach ($order->products as $product) {
+            $quantityOrderProduct = $product->pivot->quantity;
+            $quantityProduct = $product->quantity;
 
-        return redirect()->route('bills.show', [$order->id]);
+            if ($quantityProduct < $quantityOrderProduct) {
+                return redirect()->back()->withErrors(
+                    [
+                        'store' => __('Warning-Product-Quantity-Run-Out-Description', [
+                            'ProductName' => $product->name,
+                            'QuantityProduct' => $quantityProduct,
+                        ]),
+                    ]
+                );
+            }
+        }
+
+        try {
+            DB::transaction(
+                function () use ($order, $request) {
+                    foreach ($order->products as $product) {
+                        $quantityOrderProduct = $product->pivot->quantity;
+                        $quantityProduct = $product->quantity;
+
+                        $updateQuantityProduct = $quantityProduct - $quantityOrderProduct;
+                        DB::table('products')
+                            ->where('id', '=', $product->id)
+                            ->update([ 'quantity' => $updateQuantityProduct ]);
+
+                        if ($quantityProduct == $quantityOrderProduct) {
+                            $title = __('Product-Out-Of-Stock');
+                            $message = __('Warning-Product-Quantity-Run-Out-Description', [
+                                'ProductName' => $product->name,
+                                'QuantityProduct' => $updateQuantityProduct,
+                            ]);
+
+                            User::find(Auth::id())->notify(new QuantityProductNotification($title, $message));
+                        } else {
+                            if ($updateQuantityProduct < config('app.warning_product_run_out')) {
+                                $title = __('Warning-Product-Quantity-Run-Out');
+                                $message = __('Warning-Product-Quantity-Run-Out-Description', [
+                                    'ProductName' => $product->name,
+                                    'QuantityProduct' => $updateQuantityProduct,
+                                ]);
+
+                                User::find(Auth::id())->notify(new QuantityProductNotification($title, $message));
+                            }
+                        }
+                    }
+
+                    DB::table('bills')->insert([
+                        'order_id' => $order->id,
+                        'payment_method' => $request->payment_method,
+                        'total' => $request->total,
+                        'cash' => $request->cash_money,
+                        'change' => $request->change_money,
+                        'status' => array_search("Paid", config('app.bill_status')),
+                        'created_at' => now(),
+                    ]);
+                },
+                config('database.connections.mysql.max_attempts')
+            );
+
+            return redirect()->route('bills.show', [$order->id]);
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(
+                [
+                    'store' => $e->getMessage(),
+                ]
+            );
+        }
     }
 
     public function show(Order $order)

@@ -35,7 +35,7 @@ export default function Index(props) {
                                             width: '100%',
                                             marginBottom: 20,
                                         }}
-                                        extra={<div onClick={() => {removeNotification(notification.id)}} className="cursor:pointer">{lang.get('strings.Remove')}</div>}
+                                        extra={<div onClick={() => {removeNotification(notification.id)}} className="cursor:pointer text-rose-600">{lang.get('strings.Remove')}</div>}
                                         headStyle={{
                                             backgroundColor: '#fff7e6',
                                             fontSize: 18,
@@ -43,7 +43,7 @@ export default function Index(props) {
                                         }}
                                     >
                                         <p className="mb-3">{notification.data.message}</p>
-                                        <i>{notification.created_at}</i>
+                                        <i>{notification.creation_time}</i>
                                     </Card>
                                 )
                             })

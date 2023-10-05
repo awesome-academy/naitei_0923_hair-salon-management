@@ -185,7 +185,7 @@ export default function Staffs(props) {
             render: (text, record) => {
                 return (
                     <div className="flex gap-3 justify-center">
-                        <EditOutlined style={{ fontSize: 19 }} onClick={
+                        <EditOutlined style={{ fontSize: 19, color: '#1c5dfd' }} onClick={
                             () => {
                                 showModalEditCustomer(record);
                             }} />
@@ -193,7 +193,7 @@ export default function Staffs(props) {
                             () => {
                                 Inertia.get(route('customers.show', { customer: record.id }));
                             }} />
-                        <DeleteOutlined style={{ fontSize: 19 }} onClick={() => {
+                        <DeleteOutlined style={{ fontSize: 19, color: '#e80101' }} onClick={() => {
                             showDeleteConfirm(record)
                         }} />
                     </div>

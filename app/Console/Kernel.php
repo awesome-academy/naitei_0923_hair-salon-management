@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('removeOrder:cron')->monthly();
         $schedule->command('auth:clear-resets')->everyFifteenMinutes();
+        $schedule->command('remove:OrderNotifications')->daily();
     }
 
     /**

@@ -81,7 +81,7 @@ export default function Users(props) {
                     <div>
                         <div className="flex gap-3 justify-center">
                             <Tooltip title="Edit">
-                                <EditOutlined style={{ fontSize: 19 }} onClick={() => { editUser(record.id) }} />
+                                <EditOutlined style={{ fontSize: 19, color: '#1c5dfd' }} onClick={() => { editUser(record.id) }} />
                             </Tooltip>
                             <Tooltip title="View">
                                 <EyeOutlined style={{ fontSize: 19 }} onClick={
@@ -93,7 +93,7 @@ export default function Users(props) {
                                     }} />
                             </Tooltip>
                             <Tooltip title="Delete">
-                                <DeleteOutlined style={{ fontSize: 19 }} onClick={() => showModal(record.id)} />
+                                <DeleteOutlined style={{ fontSize: 19, color: '#e80101' }} onClick={() => showModal(record.id)} />
                             </Tooltip>
                         </div>
                     </div>

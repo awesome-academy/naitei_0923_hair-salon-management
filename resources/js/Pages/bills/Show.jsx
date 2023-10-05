@@ -63,6 +63,12 @@ export default function Index(props) {
                     lang.get('strings.Order-Payment-Successful')
                 );
             },
+            onError: (error) => {
+                openNotification('error',
+                    lang.get('strings.Product-Not-Enough-Quantity'),
+                    error.store
+                );
+            }
         });
     }
 
