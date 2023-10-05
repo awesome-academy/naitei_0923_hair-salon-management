@@ -42,6 +42,6 @@ class RegistrationTest extends ModelTestCase
         $registration = new Registration();
         $salon = $registration->salon();
 
-        $this->assertHasOneRelation($salon, new Registration(), new Salon(), 'email', 'owner_email');
+        $this->assertHasOneRelation($salon, new Registration(), new Salon(), 'owner_email', 'email');
     }
 }

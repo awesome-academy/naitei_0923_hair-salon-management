@@ -15,10 +15,10 @@ class Package extends Model
 
     public function salons(): HasMany
     {
-        return $this->hasMany(Salon::class);
+        return $this->hasMany(Salon::class, 'package_id', 'id');
     }
     public function registrations(): HasMany
     {
-        return $this->hasMany(Registration::class);
+        return $this->hasMany(Registration::class, 'package_id', 'id');
     }
 }
