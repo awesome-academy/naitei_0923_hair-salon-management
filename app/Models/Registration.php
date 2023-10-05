@@ -5,19 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Registration extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = ['*'];
 
     public function salon(): HasOne
     {
         return $this->hasOne(Salon::class, 'email', 'owner_email');
     }
-    public function package(): HasOne
+    public function package(): BelongsTo
     {
-        return $this->hasOne(Package::class, 'id', 'package_id');
+        return $this->belongsTo(Package::class, 'package_id', 'id');
     }
 }

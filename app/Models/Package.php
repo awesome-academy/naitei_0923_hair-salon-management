@@ -5,17 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Package extends Model
 {
     use HasFactory;
 
-    public function salon(): HasOne
+    protected $fillable = ['*'];
+
+    public function salons(): HasMany
     {
-        return $this->hasOne(Salon::class, 'package_id', 'id');
+        return $this->hasMany(Salon::class);
     }
-    public function registration(): HasOne
+    public function registrations(): HasMany
     {
-        return $this->hasOne(Registration::class, 'package_id', 'id');
+        return $this->hasMany(Registration::class);
     }
 }
