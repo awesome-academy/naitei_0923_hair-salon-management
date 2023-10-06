@@ -387,7 +387,7 @@ export default function Dashboard(props) {
                 }
             });
         });
-        console.log(customerUnique);
+
         const revenueByDay = [];
         var day = 0;
         var revenueAll = 0;
@@ -417,11 +417,10 @@ export default function Dashboard(props) {
             }
             currentDate.setDate(currentDate.getDate() + 1); 
         }
-        console.log(revenueByDay);
         setDayPicked(day);
         setRevenueTotal(revenueAll);
         setCustomerTotal(customerCount);
-        setPercentCustomerReturn(parseFloat((((customerCount - customerUnique.length) / customerCount) * 100).toFixed(0)));
+        setPercentCustomerReturn(parseFloat((((customerCount - customerUnique.length) / customerCount) * 100).toFixed(0)) || '0');
 
         const productsSortQuantity = Object.entries(productsAll).sort((a, b) => b[1].quantity - a[1].quantity);
         const productsDataChart = []
@@ -493,7 +492,8 @@ export default function Dashboard(props) {
                     </Button>
                 </div>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="w-1/2 flex gap-3 px-3 justify-start items-center mt-7">
+                <div className='text-slate-800 text-base'>{lang.get("strings.Select-Date")}: </div>
                 <RangePicker onChange={(dates) => updateDatePicker(dates)} defaultValue={[moment(firstDayInMonth, 'YYYY-MM-DD'),moment(today, 'YYYY-MM-DD')]} />
             </div>
             <div className="grid grid-cols-2 gap-2 bg-gray-50 rounded-xl p-8 my-4">
@@ -505,17 +505,21 @@ export default function Dashboard(props) {
                         <h1 className="mb-10 mt-8 text-2xl font-bold">{lang.get('strings.Revenue-Total')}</h1>
                         <Progress type="circle" percent={100} format={() => dayPicked + ' '+lang.get('strings.Days')} width={200} />
                         <h1 className="pt-10 text-4xl font-bold">
-                            <span className='text-rose-600 text-4xl'>{revenueTotal}</span>
-                            <DollarCircleOutlined style={{ color: '#E1B530' }}/>
+                            <span className='text-rose-600 text-4xl'>$ {revenueTotal}</span>
                         </h1>
                     </div>
                     <div className="flex flex-col items-center">
-                        <h1 className="mb-10 mt-8 text-2xl font-bold">{lang.get('strings.Customer-Total')}</h1>
+                        <h1 className="mb-10 mt-8 text-2xl font-bold">{lang.get('strings.Customers-Return-Percent')}</h1>
                         <Progress type="circle" percent={percentCustomerReturn} format={() => percentCustomerReturn + ' '+lang.get('strings.%')} width={200} />
-                        <h1 className="pt-10 text-4xl font-bold">
-                            <span className='text-rose-600 text-4xl'>{customerTotal}</span>
-                            <UserOutlined style={{ color: '#1890ff' }}/>
-                        </h1>
+                        <div className="pt-10">
+                            <div className='flex gap-2 items-center'>
+                                <div className='text-lg'>{lang.get("strings.Customer-Total")}</div>
+                                <div className='flex items-center'>
+                                    <span className='text-rose-600 text-lg'>{customerTotal}</span>
+                                    <UserOutlined style={{ color: '#1890ff', fontSize: 18 }}/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
