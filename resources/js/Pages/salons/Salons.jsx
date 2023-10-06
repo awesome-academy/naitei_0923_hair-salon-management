@@ -13,7 +13,7 @@ export default function Salons(props) {
     const [searchValue, setSearchValue] = useState('');
     const { Search } = Input;
     const { lang } = useLang();
-    
+
     const filters_package = salons.map(
         salon => {
             return {
@@ -85,6 +85,13 @@ export default function Salons(props) {
                 return (
                     <div className='flex gap-2'>
                         <div className='pb-2'>
+                            <a href={route('salons.edit', {salon : record.id})}>
+                                <Tooltip title="Edit">
+                                    <EditOutlined style={{ fontSize: 19, color: '#1c5dfd' }}/>
+                                </Tooltip>
+                            </a>
+                        </div>
+                        <div className='pb-2'>
                             <a href={route('salons.show', {salon : record.id})}>
                                 <Tooltip title="View">
                                     <EyeOutlined style={{ fontSize: 19 }} />
@@ -92,15 +99,8 @@ export default function Salons(props) {
                             </a>
                         </div>
                         <div className='pb-2'>
-                            <a href={route('salons.edit', {salon : record.id})}>
-                                <Tooltip title="Edit">
-                                    <EditOutlined style={{ fontSize: 19 }}/>
-                                </Tooltip>
-                            </a>
-                        </div>
-                        <div className='pb-2'>
                             <Tooltip title="Delete">
-                                    <DeleteOutlined style={{ fontSize: 19 }} onClick={() => showDeleteModal(record)} />
+                                    <DeleteOutlined style={{ fontSize: 19, color: '#e80101' }} onClick={() => showDeleteModal(record)} />
                             </Tooltip>
                         </div>
                     </div>
@@ -120,8 +120,8 @@ export default function Salons(props) {
         if (valuePrev !== '' && value !== '') {
             const salonsSearched = [];
             props[0].salons.forEach( (salon) => {
-                if (salon.id == value 
-                    || salon.name.includes(value) 
+                if (salon.id == value
+                    || salon.name.includes(value)
                     || salon.owner_email.includes(value)
                 ) {
                     salonsSearched.push(salon);
@@ -134,8 +134,8 @@ export default function Salons(props) {
             } else {
                 const salonsSearched = [];
                 salons.forEach( (salon) => {
-                    if (salon.id == value 
-                        || salon.name.includes(value) 
+                    if (salon.id == value
+                        || salon.name.includes(value)
                         || salon.owner_email.includes(value)
                     ) {
                         salonsSearched.push(salon);
@@ -166,7 +166,7 @@ export default function Salons(props) {
             ),
         })
     };
-  
+
     const handleOkDeleteModal = (modalDelete, record) => {
         modalDelete.destroy();
         deleteSalon(record);

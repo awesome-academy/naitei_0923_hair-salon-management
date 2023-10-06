@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
 import CustomTable from '@/Components/CustomeTable';
-import { Input, Modal, Select, Tag, notification } from 'antd';
+import { Input, Modal, Select, Tag, notification, Checkbox } from 'antd';
 import { useLang } from '../../Context/LangContext';
 import { DeleteOutlined, FileDoneOutlined, ExclamationCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { Inertia } from "@inertiajs/inertia";
@@ -45,6 +45,11 @@ export default function Index(props) {
         }
     );
 
+    const filters_active = [
+        { text: lang.get('strings.Yes'), value: true },
+        { text: lang.get('strings.No'), value: false },
+    ];
+
     const openNotification = (type, message, description) => {
         notification[type]({
             message: message,
@@ -82,7 +87,7 @@ export default function Index(props) {
                     onSuccess: () => {
                         openNotification('success',
                             lang.get('strings.Successfully-Deleted'),
-                            lang.get('strings.Salon-Deleteted'),
+                            lang.get('strings.Order-Deleted'),
                         );
                     },
 
@@ -118,7 +123,7 @@ export default function Index(props) {
                 <>
                     {products.map(product => product.name).map((productName) => {
                         return (
-                            <Tag key={productName}>
+                            <Tag key={productName} color="#4a98ff">
                                 {productName}
                             </Tag>
                         );
@@ -135,7 +140,8 @@ export default function Index(props) {
             render: (_, record ) => {
                 return (
                     <Select
-                        defaultValue={record.status}
+                        defaultValue={false}
+                        value={record.status}
                         style={{
                             width: 120,
                         }}
@@ -156,9 +162,24 @@ export default function Index(props) {
                             {
                                 label: 'Cancel',
                                 value: 'Cancel'
-                            }, 
+                            },
                         ]}
                     />
+                )
+            }
+        },
+        {
+            title: lang.get('strings.Pay-Order'),
+            align: 'center',
+            filters: filters_active,
+            onFilter: (value, record) => {
+                if (record.pay_order == value) {
+                    return true;
+                }
+            },
+            render: (record) => {
+                return (
+                    <Checkbox checked={record.pay_order} />
                 )
             }
         },
@@ -172,11 +193,11 @@ export default function Index(props) {
                             () => {
                                 Inertia.get(route('orders.show', { order: record.id }));
                             }} />
-                        <FileDoneOutlined style={{ fontSize: 19 }} title={lang.get('strings.Detail-Bill')} onClick={
+                        <FileDoneOutlined style={{ fontSize: 19, color: '#1c5dfd' }} title={lang.get('strings.Detail-Bill')} onClick={
                             () => {
                                 Inertia.get(route('bills.show', { order: record.id }));
                             }} />
-                        <DeleteOutlined style={{ fontSize: 19 }} title={lang.get('strings.Delete')} onClick={() => {
+                        <DeleteOutlined style={{ fontSize: 19, color: '#e80101' }} title={lang.get('strings.Delete')} onClick={() => {
                             showDeleteConfirm(record.id)
                         }} />
                     </div>

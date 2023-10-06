@@ -283,4 +283,6 @@ return [
         0 => 'Unpaid',
         1 => 'Paid',
     ],
+
+    'warning_product_run_out' => 10,
 ];

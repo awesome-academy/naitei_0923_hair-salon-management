@@ -53,6 +53,24 @@ class OrderController extends Controller
     {
         $validated = $request->validated();
 
+        $productsRequest = $request->input('products');
+        foreach ($productsRequest as $productId => $quantityRequest) {
+            $product = DB::table('products')
+                ->where('id', $productId)
+                ->first();
+
+            if ($product->quantity < $quantityRequest) {
+                return redirect()->back()->withErrors(
+                    [
+                        'store' => __('Warning-Product-Quantity-Run-Out-Description', [
+                            'ProductName' => $product->name,
+                            'QuantityProduct' => $product->quantity,
+                        ]),
+                    ]
+                );
+            }
+        }
+
         $order_status = collect(config('app.order_status'));
         $prepare_id = $order_status->search('Prepare');
 
@@ -193,12 +211,18 @@ class OrderController extends Controller
 
             $changingPerson = auth()->user()->first_name." ".auth()->user()->last_name;
 
-            $title = __("Order-Status-Updated", ['Id' => $order->id]);
+            $orderToday = DB::table('orders')
+                ->selectRaw('COUNT(*) as serial')
+                ->whereDate('created_at', now()->toDateString())
+                ->where('id', '<=', $order->id)
+                ->first();
+
+            $title = __("Order-Status-Updated", ['Serial' => $orderToday->serial]);
             $message = __(
                 'Change-Order-Status',
                 [
                     'ChangingPerson' => $changingPerson,
-                    'Id' => $order->id,
+                    'Serial' => $orderToday->serial,
                     'NewStatus' => $textStatus,
                 ]
             );
@@ -239,22 +263,26 @@ class OrderController extends Controller
 
     private function transformOrder()
     {
-        $orders = Order::with(['customer', 'products'])->where('salon_id', session('selectedSalon'))
+        $orders = Order::with(['customer', 'products', 'bill'])->where('salon_id', session('selectedSalon'))
             ->whereDate('created_at', now()->toDateString())
-            ->orderByDesc('created_at')
             ->get();
-        $count = count($orders);
 
-        foreach ($orders as $order) {
-            $order->serial = $count--;
+        foreach ($orders as $index => $order) {
+            $order->serial = ++$index;
             $order->time_arrive = Carbon::create($order->created_at)->format('d/m/y H:i');
             $order->status = config('app.order_status')[$order->status];
+
+            if (isset($order->bill)) {
+                $order->pay_order = true;
+            } else {
+                $order->pay_order = false;
+            }
         }
 
         return $orders;
     }
 
-    public function detailOrderPage(Order $order)
+    private function detailOrderPage(Order $order)
     {
         $creation_time = Carbon::create($order->created_at);
         $serial = DB::table('orders')

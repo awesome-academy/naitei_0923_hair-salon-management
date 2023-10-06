@@ -64,7 +64,7 @@ export default function Categories(props) {
                             </div> :
                             <div className="flex gap-3 justify-center">
                                 <Tooltip title="Edit">
-                                    <EditOutlined style={{ fontSize: 19 }} onClick={() => { editCategory(record.id) }} />
+                                    <EditOutlined style={{ fontSize: 19, color: '#1c5dfd' }} onClick={() => { editCategory(record.id) }} />
                                 </Tooltip>
                                 <Tooltip title="View">
                                     <EyeOutlined style={{ fontSize: 19 }} onClick={
@@ -76,7 +76,7 @@ export default function Categories(props) {
                                         }} />
                                 </Tooltip>
                                 <Tooltip title="Delete">
-                                    <DeleteOutlined style={{ fontSize: 19 }} onClick={() => showModal(record.id)} />
+                                    <DeleteOutlined style={{ fontSize: 19, color: '#e80101' }} onClick={() => showModal(record.id)} />
                                 </Tooltip>
                             </div>
                         }
@@ -161,7 +161,7 @@ export default function Categories(props) {
                         icon={<PlusCircleOutlined />}
                         type="primary"
                         shape="round"
-                        size={"large"} 
+                        size={"large"}
                         onClick={createCategory}
                     >{lang.get('strings.Create-Category')}</Button>
                     <Search placeholder="input id, name"
@@ -172,7 +172,7 @@ export default function Categories(props) {
                         allowClear
                         style={{
                             width: 304,
-                        }} 
+                        }}
                     />
                 </div>
                 <div className="max-w-full mx-auto sm:px-6 lg:px-8">
