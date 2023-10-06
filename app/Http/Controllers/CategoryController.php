@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Repositories\CategoryRepository;
 use Illuminate\Http\Request;
+use App\Repositories\Contracts\CategoryRepositoryInterface;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use Illuminate\Support\Facades\DB;
@@ -13,31 +15,32 @@ use Exception;
 class CategoryController extends Controller
 {
     /**
+     * @var CategoryRepositoryInterface
+     */
+    private $categoryRepository;
+
+    public function __construct(CategoryRepository $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $categories = Category::with('products')
-            ->where('salon_id', session('selectedSalon'))
-            ->get();
-        
+        $categories = $this->categoryRepository->getAll();
+
         foreach ($categories as $category) {
             $category = clone $this->aggregateCategoryInformation($category);
         }
-
-        $sortedCategories = $categories->sortBy(
-            [
-                ['is_active', 'desc'],
-            ]
-        );
 
         return Inertia::render(
             'categories/Index.jsx',
             [
                 [
-                    'categories' => $sortedCategories,
+                    'categories' => $categories,
                 ],
             ]
         );
@@ -63,23 +66,15 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreCategoryRequest $request)
     {
         $validated = $request->validated();
-        
+        $validated['is_active'] = $validated['active'];
         try {
-            DB::table('categories')->insert(
-                [
-                    'name' => $validated['name'],
-                    'salon_id' => session('selectedSalon'),
-                    'is_active' => $validated['active'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-            );
+            $this->categoryRepository->create($validated);
         } catch (Exception $e) {
             return redirect()->back()->withErrors(
                 [
@@ -94,19 +89,18 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Category  $category
+     * @param  \App\Models\Category $category
      * @return \Illuminate\Http\Response
      */
     public function show(Category $category)
     {
-        $category = Category::with('products')->find($category->id);
-        $category = clone $this->aggregateCategoryInformation($category);
+        $category = $this->categoryRepository->find($category->id);
 
         return Inertia::render(
             'categories/Show.jsx',
             [
                 [
-                    'category' => $category,
+                    'category' => $this->aggregateCategoryInformation($category),
                 ],
             ]
         );
@@ -115,7 +109,7 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Category  $category
+     * @param  \App\Models\Category $category
      * @return \Illuminate\Http\Response
      */
     public function edit(Category $category)
@@ -134,22 +128,16 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Category  $category
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Models\Category     $category
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateCategoryRequest $request, $id)
     {
         try {
             $validated = $request->validated();
-            DB::table('categories')->where('id', intval($id))
-                ->update(
-                    [
-                        'name' => $validated['name'],
-                        'is_active' => $validated['active'],
-                        'updated_at' => now(),
-                    ]
-                );
+            $validated['is_active'] = $validated['active'];
+            $this->categoryRepository->update($id, $validated);
         } catch (Exception $e) {
             return redirect()->back()->withErrors(
                 [
@@ -164,17 +152,13 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Category  $category
+     * @param  \App\Models\Category $category
      * @return \Illuminate\Http\Response
      */
     public function destroy(Category $category)
     {
         try {
-            DB::transaction(
-                function () use ($category) {
-                    $category->delete();
-                }
-            );
+            $this->categoryRepository->delete($category->id);
         } catch (Exception $e) {
             return redirect()->back()->withErrors(
                 [
@@ -182,7 +166,7 @@ class CategoryController extends Controller
                 ]
             );
         }
-        
+
         return redirect()->route('categories.index');
     }
 
@@ -192,7 +176,7 @@ class CategoryController extends Controller
         $category->is_active = $is_active;
         $products = $category->products;
         $category->product_type = count($products);
-        
+
         $product_number = 0;
 
         foreach ($products as $product) {
